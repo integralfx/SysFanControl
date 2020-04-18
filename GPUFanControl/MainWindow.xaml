@@ -12,8 +12,8 @@
     <Grid>
         <Label x:Name="labelTemperatureLabel" Content="Temperature:" HorizontalAlignment="Left" Margin="10,10,0,0" 
                VerticalAlignment="Top"/>
-        <Label x:Name="labelTemperature" Content="" HorizontalAlignment="Left" Margin="94,10,0,0" 
-               VerticalAlignment="Top"/>
+        <Label x:Name="labelTemperature" Content="{Binding FanCurvesCtrl.Temperature}" ContentStringFormat="{}{0} °C"
+               HorizontalAlignment="Left" Margin="94,10,0,0" VerticalAlignment="Top"/>
         <ListView x:Name="listViewFans" HorizontalAlignment="Left" Height="200" Margin="10,41,0,0" 
                   VerticalAlignment="Top" Width="204" ItemsSource="{Binding FanCurvesCtrl.FanCurves}" 
                   SelectedItem="{Binding FanCurvesCtrl.SelectedFanCurve, Mode=TwoWay}" BorderThickness="1">
