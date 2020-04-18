@@ -20,9 +20,9 @@ namespace GPUFanControl.ViewModels
         }
         public BindingList<FanCurvePoint> Points { get; } = new BindingList<FanCurvePoint>
         {
-            new FanCurvePoint(40, 50),
-            new FanCurvePoint(50, 70),
-            new FanCurvePoint(60, 100)
+            new FanCurvePoint{ Temperature = 40, Percent = 50 },
+            new FanCurvePoint{ Temperature = 50, Percent = 70 },
+            new FanCurvePoint{ Temperature = 60, Percent = 100 }
         };
     }
 }

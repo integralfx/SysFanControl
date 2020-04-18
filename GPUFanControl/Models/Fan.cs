@@ -4,10 +4,15 @@
     {
         public int index, speed;
 
-        public Fan(int index = 0, int speed = 0)
+        public int Index
         {
-            this.index = index;
-            this.speed = speed;
+            get => index;
+            set => index = value;
+        }
+        public int Speed
+        {
+            get => speed;
+            set => speed = value;
         }
     }
 }
