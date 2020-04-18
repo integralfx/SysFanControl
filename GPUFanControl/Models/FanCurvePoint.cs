@@ -1,18 +1,24 @@
 ﻿namespace GPUFanControl.Models
 {
-    public class FanCurvePoint : ViewModelBase
+    public class FanCurvePoint
     {
-        private int _temperature, _percent;
+        public int temperature = 0, percent = 0;
+
+        public FanCurvePoint(int temperature, int percent)
+        {
+            this.temperature = temperature;
+            this.percent = percent;
+        }
 
         public int Temperature
         {
-            get => _temperature;
-            set => SetProperty(ref _temperature, value);
+            get => temperature;
+            set => temperature = value;
         }
         public int Percent
         {
-            get => _percent;
-            set => SetProperty(ref _percent, value);
+            get => percent;
+            set => percent = value;
         }
     }
 }

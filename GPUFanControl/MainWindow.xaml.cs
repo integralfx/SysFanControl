@@ -1,7 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using System;
 using System.Windows.Threading;
-using GPUFanControl.Models;
+using GPUFanControl.ViewModels;
 
 namespace GPUFanControl
 {
@@ -30,8 +30,7 @@ namespace GPUFanControl
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            FanCurvesCtrl.UpdateFans();
-            listViewFans.Items.Refresh();
+            FanCurvesCtrl.Update();
         }
     }
 }

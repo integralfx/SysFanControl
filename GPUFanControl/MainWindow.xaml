@@ -19,13 +19,12 @@
                   SelectedItem="{Binding FanCurvesCtrl.SelectedFanCurve, Mode=TwoWay}" BorderThickness="1">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Index" DisplayMemberBinding="{Binding Sensor.Index}" Width="50"/>
-                    <GridViewColumn Header="Speed (RPM)" DisplayMemberBinding="{Binding Sensor.Value}" Width="90"/>
+                    <GridViewColumn Header="Index" DisplayMemberBinding="{Binding Index}" Width="50"/>
+                    <GridViewColumn Header="Speed (RPM)" DisplayMemberBinding="{Binding Speed}" Width="90"/>
                     <GridViewColumn Header="Curve" Width="60">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox x:Name="checkBoxCurve" IsChecked="{Binding CurveEnabled, Mode=TwoWay}"
-                                          Tag="{Binding Sensor.Index}" />
+                                <CheckBox x:Name="checkBoxCurve" IsChecked="{Binding CurveEnabled, Mode=TwoWay}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
