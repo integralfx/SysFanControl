@@ -16,7 +16,6 @@ namespace GPUFanControl.ViewModels
             GPUEnabled = true,
             FanControllerEnabled = true
         };
-        private readonly List<ISensor> superIOControls;
         private FanCurve selectedFanCurve;
         private readonly DispatcherTimer timer = new DispatcherTimer
         {
@@ -45,8 +44,6 @@ namespace GPUFanControl.ViewModels
             {
                 FanCurves.Add(new FanCurve(fanSensor, GPU, OnEnabledChanged));
             }
-
-            superIOControls = superIO.Sensors.Where(s => s.SensorType == SensorType.Control).ToList();
 
             timer.Tick += timer_Tick;
             timer.Start();

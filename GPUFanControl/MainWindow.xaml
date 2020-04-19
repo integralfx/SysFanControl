@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Background="#252525"
         ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
-        Title="GPU Fan Control" Width="435" Closed="MetroWindow_Closed" Height="300">
+        Title="GPU Fan Control" Width="435" Height="300">
     <Grid Height="270">
         <Label x:Name="labelGPULabel" Content="GPU:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="labelGPU" Content="{Binding GPU.Name}" HorizontalAlignment="Left" Margin="90,10,0,0" 

@@ -11,10 +11,5 @@ namespace GPUFanControl
             InitializeComponent();
             DataContext = new MainWindowViewModel();
         }
-
-        private void MetroWindow_Closed(object sender, EventArgs e)
-        {
-            
-        }
     }
 }
