@@ -21,13 +21,7 @@ namespace GPUFanControl.ViewModels
         public FanCurve SelectedFanCurve
         {
             get => selectedFanCurve;
-            set
-            {
-                if (value.Enabled)
-                {
-                    SetProperty(ref selectedFanCurve, value);
-                }
-            }
+            set => SetProperty(ref selectedFanCurve, value.Enabled ? value : null);
         }
 
         public MainWindowViewModel()

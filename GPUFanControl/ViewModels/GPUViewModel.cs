@@ -13,6 +13,7 @@ namespace GPUFanControl.ViewModels
         }
 
         public int Temperature { get => gpu.Temperature; }
+        public string Name { get => gpu.Name; }
 
         public override void Update()
         {

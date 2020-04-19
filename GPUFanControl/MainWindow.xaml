@@ -10,11 +10,14 @@
         ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
         Title="GPU Fan Control" Height="450" Width="800" Closed="MetroWindow_Closed">
     <Grid>
-        <Label x:Name="labelTemperatureLabel" Content="Temperature:" HorizontalAlignment="Left" Margin="10,10,0,0" 
+        <Label x:Name="labelGPULabel" Content="GPU:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="labelGPU" Content="{Binding GPUViewModel.Name}" HorizontalAlignment="Left" Margin="90,10,0,0" 
+               VerticalAlignment="Top"/>
+        <Label x:Name="labelTemperatureLabel" Content="Temperature:" HorizontalAlignment="Left" Margin="10,29,0,0" 
                VerticalAlignment="Top"/>
         <Label x:Name="labelTemperature" Content="{Binding GPUViewModel.Temperature}" 
-               ContentStringFormat="{}{0} °C" HorizontalAlignment="Left" Margin="94,10,0,0" VerticalAlignment="Top"/>
-        <ListView x:Name="listViewFans" HorizontalAlignment="Left" Height="200" Margin="10,41,0,0" 
+               ContentStringFormat="{}{0} °C" HorizontalAlignment="Left" Margin="90,29,0,0" VerticalAlignment="Top"/>
+        <ListView x:Name="listViewFans" HorizontalAlignment="Left" Height="200" Margin="10,60,0,0" 
                   VerticalAlignment="Top" Width="204" ItemsSource="{Binding FanCurvesViewModel.FanCurves}" 
                   SelectedItem="{Binding SelectedFanCurve, Mode=TwoWay}" BorderThickness="1">
             <ListView.View>
@@ -31,7 +34,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView x:Name="listViewControl" HorizontalAlignment="Left" Height="200" Margin="219,41,0,0" 
+        <ListView x:Name="listViewControl" HorizontalAlignment="Left" Height="200" Margin="219,60,0,0" 
                   VerticalAlignment="Top" Width="204" ItemsSource="{Binding SelectedFanCurve.Points}" 
                   BorderThickness="1">
             <ListView.View>
