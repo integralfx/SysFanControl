@@ -34,10 +34,5 @@ namespace GPUFanControl.Models
             new FanCurvePoint{ Temperature = 50, Percent = 75 },
             new FanCurvePoint{ Temperature = 60, Percent = 100 }
         };
-
-        public override void Update()
-        {
-            base.Update();
-        }
     }
 }
