@@ -1,5 +1,4 @@
 ﻿using MahApps.Metro.Controls;
-using System;
 using GPUFanControl.ViewModels;
 
 namespace GPUFanControl

@@ -7,7 +7,7 @@ using System.Windows.Threading;
 
 namespace GPUFanControl.ViewModels
 {
-    public class MainWindowViewModel : BaseNotifyPropertyChanged
+    public class MainWindowViewModel : BaseNotifyPropertyChanged, IDisposable
     {
         private readonly Computer computer = new Computer
         {
@@ -20,6 +20,7 @@ namespace GPUFanControl.ViewModels
         {
             Interval = TimeSpan.FromSeconds(1.0)
         };
+        private bool disposed = false;
 
         public GPU GPU { get; }
         public BindingList<FanCurve> FanCurves { get; } = new BindingList<FanCurve>();
@@ -48,6 +49,11 @@ namespace GPUFanControl.ViewModels
             timer.Start();
         }
 
+        ~MainWindowViewModel()
+        {
+            Dispose(false);
+        }
+
         private void OnEnabledChanged(bool newValue)
         {
             if (selectedFanCurve == null)
@@ -64,6 +70,31 @@ namespace GPUFanControl.ViewModels
             foreach (var fanCurve in FanCurves)
             {
                 fanCurve.Update();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    foreach (var fanCurve in FanCurves)
+                    {
+                        fanCurve.Dispose();
+                    }
+                }
+
+                timer.Stop();
+                computer.Close();
+
+                disposed = true;
             }
         }
     }
