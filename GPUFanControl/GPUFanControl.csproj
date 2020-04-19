@@ -66,9 +66,8 @@
     </ApplicationDefinition>
     <Compile Include="BaseNotifyPropertyChanged.cs" />
     <Compile Include="Models\FanCurve.cs" />
-    <Compile Include="Models\GPU.cs" />
-    <Compile Include="ViewModels\FanCurvesViewModel.cs" />
     <Compile Include="ViewModels\GPUViewModel.cs" />
+    <Compile Include="ViewModels\FanCurvesViewModel.cs" />
     <Compile Include="ViewModels\HardwareViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
