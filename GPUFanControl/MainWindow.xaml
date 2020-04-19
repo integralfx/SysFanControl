@@ -31,7 +31,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView x:Name="listViewControl" HorizontalAlignment="Left" Height="150" Margin="219,41,0,0" 
+        <ListView x:Name="listViewControl" HorizontalAlignment="Left" Height="200" Margin="219,41,0,0" 
                   VerticalAlignment="Top" Width="204" ItemsSource="{Binding FanCurvesCtrl.SelectedFanCurve.Points}" 
                   BorderThickness="1">
             <ListView.View>
