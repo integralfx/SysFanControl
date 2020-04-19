@@ -1,12 +1,13 @@
 ﻿using GPUFanControl.ViewModels;
 using OpenHardwareMonitor.Hardware;
 using System;
+using System.Linq;
 
 namespace GPUFanControl.Models
 {
     public class Fan : HardwareNotifyPropertyChanged
     {
-        private readonly ISensor sensor;
+        private readonly ISensor fanSensor, fanControlSensor;
         private int speed = 0;
 
         public Fan(ISensor fanSensor)
@@ -16,10 +17,12 @@ namespace GPUFanControl.Models
                 throw new ArgumentException("fanSensor");
             }
 
-            sensor = fanSensor;
+            this.fanSensor = fanSensor;
+            fanControlSensor = fanSensor.Hardware.Sensors
+                .Where(s => s.SensorType == SensorType.Control && s.Index == fanSensor.Index).First();
         }
 
-        public int Index { get => sensor.Index; }
+        public int Index { get => fanSensor.Index; }
         public int Speed
         {
             get => speed;
@@ -28,12 +31,24 @@ namespace GPUFanControl.Models
 
         public override void Update()
         {
-            sensor.Hardware.Update();
-            var newSpeed = sensor.Value;
+            fanSensor.Hardware.Update();
+            var newSpeed = fanSensor.Value;
             if (newSpeed.HasValue)
             {
                 Speed = (int)newSpeed.Value;
             }
+        }
+
+        public void SetSoftware(int percent)
+        {
+            fanControlSensor.Control.SetSoftware(percent);
+            Update();
+        }
+
+        public void SetDefault()
+        {
+            fanControlSensor.Control.SetDefault();
+            Update();
         }
     }
 }
