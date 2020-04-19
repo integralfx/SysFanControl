@@ -12,12 +12,12 @@ namespace GPUFanControl
             Interval = TimeSpan.FromSeconds(1.0)
         };
 
-        public FanCurvesControl FanCurvesCtrl { get; set; } = new FanCurvesControl();
+        public MainWindowViewModel MainWindowViewModel { get; set; } = new MainWindowViewModel();
 
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = this;
+            DataContext = MainWindowViewModel;
 
             timer.Tick += timer_Tick;
             timer.Start();
@@ -30,7 +30,7 @@ namespace GPUFanControl
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            FanCurvesCtrl.Update();
+            MainWindowViewModel.Update();
         }
     }
 }

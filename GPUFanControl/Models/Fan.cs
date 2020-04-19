@@ -20,7 +20,11 @@ namespace GPUFanControl.Models
         public int Index { get => sensor.Index; }
         public int Speed
         {
-            get => (int?)sensor.Value ?? 0;
+            get
+            {
+                sensor.Hardware.Update();
+                return (int?)sensor.Value ?? 0;
+            }
         }
     }
 }
