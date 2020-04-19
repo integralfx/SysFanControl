@@ -1,18 +1,26 @@
-﻿namespace GPUFanControl.Models
+﻿using OpenHardwareMonitor.Hardware;
+using System;
+
+namespace GPUFanControl.Models
 {
     public class Fan
     {
-        public int index, speed;
+        private readonly ISensor sensor;
 
-        public int Index
+        public Fan(ISensor fanSensor)
         {
-            get => index;
-            set => index = value;
+            if (fanSensor.SensorType != SensorType.Fan)
+            {
+                throw new ArgumentException("fanSensor");
+            }
+
+            sensor = fanSensor;
         }
+
+        public int Index { get => sensor.Index; }
         public int Speed
         {
-            get => speed;
-            set => speed = value;
+            get => (int?)sensor.Value ?? 0;
         }
     }
 }

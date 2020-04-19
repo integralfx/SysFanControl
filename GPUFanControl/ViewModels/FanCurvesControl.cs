@@ -1,4 +1,5 @@
-﻿using OpenHardwareMonitor.Hardware;
+﻿using GPUFanControl.Models;
+using OpenHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,10 +17,8 @@ namespace GPUFanControl.ViewModels
         };
         private readonly IHardware superIO, gpu;
         private readonly List<ISensor> superIOFans, superIOControls;
-        private BindingList<FanCurveViewModel> fanCurves = new BindingList<FanCurveViewModel>();
-        private FanCurveViewModel selectedFanCurve;
+        private FanCurve selectedFanCurve;
         private bool disposed = false;
-        private float temperature = 0;
 
         public FanCurvesControl()
         {
@@ -31,7 +30,7 @@ namespace GPUFanControl.ViewModels
             superIOFans = superIO.Sensors.Where(s => s.SensorType == SensorType.Fan).ToList();
             foreach (var fan in superIOFans)
             {
-                fanCurves.Add(new FanCurveViewModel(fan));
+                FanCurves.Add(new FanCurve(fan));
             }
 
             superIOControls = superIO.Sensors.Where(s => s.SensorType == SensorType.Control).ToList();
@@ -44,32 +43,24 @@ namespace GPUFanControl.ViewModels
             Dispose(false);
         }
 
-        public BindingList<FanCurveViewModel> FanCurves
+        public BindingList<FanCurve> FanCurves { get; } = new BindingList<FanCurve>();
+        public FanCurve SelectedFanCurve
         {
-            get => fanCurves;
-            set => SetProperty(ref fanCurves, value);
-        }
-        public FanCurveViewModel SelectedFanCurve
-        {
-            get => selectedFanCurve != null && selectedFanCurve.CurveEnabled ? selectedFanCurve : null;
+            get => selectedFanCurve != null && selectedFanCurve.Enabled ? selectedFanCurve : null;
             set => SetProperty(ref selectedFanCurve, value);
         }
         public float Temperature
         {
-            get => temperature;
-            set => SetProperty(ref temperature, value);
+            get => gpu.Sensors[0].Value ?? 0;
         }
 
         public void Update()
         {
             superIO.Update();
-            foreach (var fanCurve in fanCurves)
-            {
-                fanCurve.Speed = (int?)superIOFans.Find(f => f.Index == fanCurve.Index).Value ?? 0;
-            }
+            PropertyUpdated(nameof(FanCurves));
 
             gpu.Update();
-            Temperature = gpu.Sensors[0].Value ?? 0;
+            PropertyUpdated(nameof(Temperature));
         }
 
         public void Dispose()

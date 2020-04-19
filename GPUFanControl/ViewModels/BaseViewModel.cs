@@ -18,5 +18,10 @@ namespace GPUFanControl.ViewModels
             }
             return false;
         }
+
+        protected void PropertyUpdated([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

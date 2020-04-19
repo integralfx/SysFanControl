@@ -64,7 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ViewModels\FanCurveViewModel.cs" />
+    <Compile Include="Models\FanCurve.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -82,7 +82,6 @@
     <Compile Include="Models\Fan.cs" />
     <Compile Include="Models\FanCurvePoint.cs" />
     <Compile Include="ViewModels\FanCurvesControl.cs" />
-    <Compile Include="ViewModels\FanViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

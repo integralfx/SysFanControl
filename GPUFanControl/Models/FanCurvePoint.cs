@@ -1,18 +1,24 @@
-﻿namespace GPUFanControl.Models
+﻿using System;
+
+namespace GPUFanControl.Models
 {
     public class FanCurvePoint
     {
-        public int temperature = 0, percent = 0;
+        private int percent;
 
-        public int Temperature
-        {
-            get => temperature;
-            set => temperature = value;
-        }
+        public int Temperature { get; set; }
         public int Percent
         {
             get => percent;
-            set => percent = value;
+            set
+            {
+                if (value < 0 || value > 100)
+                {
+                    throw new ArgumentException("Percent set");
+                }
+
+                percent = value;
+            }
         }
     }
 }

@@ -24,7 +24,7 @@
                     <GridViewColumn Header="Curve" Width="60">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox x:Name="checkBoxCurve" IsChecked="{Binding CurveEnabled, Mode=TwoWay}" />
+                                <CheckBox x:Name="checkBoxCurve" IsChecked="{Binding Enabled, Mode=TwoWay}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
