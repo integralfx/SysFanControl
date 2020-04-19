@@ -7,12 +7,12 @@ namespace GPUFanControl.Models
 {
     public class FanCurve : HardwareViewModel
     {
-        private readonly Fan fan;
+        private readonly FanViewModel fan;
         private bool enabled = false;
 
         public FanCurve(ISensor fanSensor)
         {
-            fan = new Fan(fanSensor);
+            fan = new FanViewModel(fanSensor);
         }
 
         public int Index
@@ -37,7 +37,7 @@ namespace GPUFanControl.Models
 
         public override void Update()
         {
-            PropertyUpdated(nameof(fan.Speed));
+            fan.Update();
         }
 
         public bool SetPoint(int index, FanCurvePoint newPoint)

@@ -84,7 +84,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Fan.cs" />
+    <Compile Include="ViewModels\FanViewModel.cs" />
     <Compile Include="Models\FanCurvePoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
