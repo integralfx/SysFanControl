@@ -17,6 +17,17 @@ namespace GPUFanControl.Models
         {
             this.gpu = gpu;
             this.onEnabledChanged = onEnabledChanged;
+
+            var points = new List<FanCurvePoint>
+            {
+                new FanCurvePoint{ Temperature = 40, Percent = 50 },
+                new FanCurvePoint{ Temperature = 50, Percent = 75 },
+                new FanCurvePoint{ Temperature = 60, Percent = 100 }
+            };
+            foreach (var point in points)
+            {
+                AddPoint(point);
+            }
         }
 
         public bool Enabled
@@ -38,12 +49,23 @@ namespace GPUFanControl.Models
                 }
             }
         }
-        public List<FanCurvePoint> Points { get; } = new List<FanCurvePoint>
+        public List<SmartFanCurvePoint> Points { get; } = new List<SmartFanCurvePoint>();
+
+        public void AddPoint(FanCurvePoint point)
         {
-            new FanCurvePoint{ Temperature = 40, Percent = 50 },
-            new FanCurvePoint{ Temperature = 50, Percent = 75 },
-            new FanCurvePoint{ Temperature = 60, Percent = 100 }
-        };
+            var previous = Points.Count() > 0 ? Points.Last() : null;
+            var current = new SmartFanCurvePoint
+            {
+                Temperature = point.Temperature,
+                Percent = point.Percent,
+                PreviousPoint = previous
+            };
+            Points.Add(current);
+            if (previous != null)
+            {
+                previous.NextPoint = current;
+            }
+        }
 
         public override void Update()
         {
