@@ -1,7 +1,4 @@
-﻿using GPUFanControl.ViewModels;
-using System;
-
-namespace GPUFanControl.Models
+﻿namespace GPUFanControl.Models
 {
     public class FanCurvePoint : BaseNotifyPropertyChanged
     {
@@ -17,13 +14,10 @@ namespace GPUFanControl.Models
             get => percent;
             set
             {
-                if (value < 0 || value > 100)
+                if (value >= 0 && value <= 100)
                 {
-                    throw new ArgumentException("Percent set");
+                    SetProperty(ref percent, value);
                 }
-
-                percent = value;
-                PropertyUpdated();
             }
         }
     }

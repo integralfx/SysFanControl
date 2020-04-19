@@ -8,7 +8,7 @@ namespace GPUFanControl.Models
     public class Fan : HardwareNotifyPropertyChanged
     {
         private readonly ISensor fanSensor, fanControlSensor;
-        private int speed = 0;
+        private int speed = 0, percent = 0;
 
         public Fan(ISensor fanSensor)
         {
@@ -20,6 +20,7 @@ namespace GPUFanControl.Models
             this.fanSensor = fanSensor;
             fanControlSensor = fanSensor.Hardware.Sensors
                 .Where(s => s.SensorType == SensorType.Control && s.Index == fanSensor.Index).First();
+            percent = (int)fanControlSensor.Control.SoftwareValue;
         }
 
         public int Index { get => fanSensor.Index; }
@@ -30,11 +31,11 @@ namespace GPUFanControl.Models
         }
         public int Percent
         {
-            get => (int)fanControlSensor.Control.SoftwareValue;
+            get => percent;
             set
             {
                 fanControlSensor.Control.SetSoftware(value);
-                PropertyUpdated();
+                SetProperty(ref percent, value);
                 PropertyUpdated(nameof(Speed));
             }
         }

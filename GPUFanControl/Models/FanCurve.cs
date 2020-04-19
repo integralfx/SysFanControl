@@ -71,7 +71,14 @@ namespace GPUFanControl.Models
                     var next = Points[i + 1];
                     if (temperature >= current.Temperature && gpu.Temperature <= next.Temperature)
                     {
-                        Percent = (int)Math.Round(1.0 * temperature / current.Temperature * current.Percent);
+                        if (current.Percent == next.Percent)
+                        {
+                            Percent = current.Percent;
+                            break;
+                        }
+
+                        var scale = 1.0 * (next.Percent - current.Percent) / (next.Temperature - current.Temperature);
+                        Percent = (int)Math.Round((temperature - current.Temperature) * scale + current.Percent);
                         break;
                     }
                 }
