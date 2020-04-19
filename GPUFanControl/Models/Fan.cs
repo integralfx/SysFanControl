@@ -28,6 +28,16 @@ namespace GPUFanControl.Models
             get => speed;
             private set => SetProperty(ref speed, value);
         }
+        public int Percent
+        {
+            get => (int)fanControlSensor.Control.SoftwareValue;
+            set
+            {
+                fanControlSensor.Control.SetSoftware(value);
+                PropertyUpdated();
+                PropertyUpdated(nameof(Speed));
+            }
+        }
 
         public override void Update()
         {
@@ -37,12 +47,6 @@ namespace GPUFanControl.Models
             {
                 Speed = (int)newSpeed.Value;
             }
-        }
-
-        public void SetSoftware(int percent)
-        {
-            fanControlSensor.Control.SetSoftware(percent);
-            Update();
         }
 
         public void SetDefault()

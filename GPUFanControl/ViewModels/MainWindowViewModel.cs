@@ -43,7 +43,7 @@ namespace GPUFanControl.ViewModels
             var superIOFans = superIO.Sensors.Where(s => s.SensorType == SensorType.Fan).ToList();
             foreach (var fanSensor in superIOFans)
             {
-                FanCurves.Add(new FanCurve(fanSensor, OnEnabledChanged));
+                FanCurves.Add(new FanCurve(fanSensor, GPU, OnEnabledChanged));
             }
 
             superIOControls = superIO.Sensors.Where(s => s.SensorType == SensorType.Control).ToList();
