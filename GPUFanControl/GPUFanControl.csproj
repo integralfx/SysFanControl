@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BaseNotifyPropertyChanged.cs" />
     <Compile Include="Models\FanCurve.cs" />
     <Compile Include="Models\GPU.cs" />
     <Compile Include="ViewModels\FanCurvesViewModel.cs" />
@@ -86,7 +87,6 @@
   <ItemGroup>
     <Compile Include="Models\Fan.cs" />
     <Compile Include="Models\FanCurvePoint.cs" />
-    <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

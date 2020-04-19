@@ -1,7 +1,6 @@
 ﻿using GPUFanControl.Models;
 using OpenHardwareMonitor.Hardware;
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 

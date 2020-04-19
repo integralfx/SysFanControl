@@ -3,7 +3,7 @@ using System;
 
 namespace GPUFanControl.Models
 {
-    public class FanCurvePoint : BaseViewModel
+    public class FanCurvePoint : BaseNotifyPropertyChanged
     {
         private int temperature = 0, percent = 0;
 

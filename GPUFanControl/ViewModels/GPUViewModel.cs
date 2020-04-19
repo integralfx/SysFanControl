@@ -17,7 +17,7 @@ namespace GPUFanControl.ViewModels
 
         public override void Update()
         {
-            PropertyUpdated(nameof(gpu.Temperature));
+            //PropertyUpdated(nameof(gpu.Temperature));
         }
     }
 }

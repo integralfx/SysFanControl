@@ -1,6 +1,6 @@
 ﻿namespace GPUFanControl.ViewModels
 {
-    public abstract class HardwareViewModel : BaseViewModel
+    public abstract class HardwareViewModel : BaseNotifyPropertyChanged
     {
         public abstract void Update();
     }

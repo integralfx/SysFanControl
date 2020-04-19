@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace GPUFanControl.ViewModels
+namespace GPUFanControl
 {
-    public abstract class BaseViewModel : INotifyPropertyChanged
+    public abstract class BaseNotifyPropertyChanged : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

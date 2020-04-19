@@ -3,9 +3,10 @@ using System;
 
 namespace GPUFanControl.Models
 {
-    class GPU
+    class GPU : BaseNotifyPropertyChanged
     {
         private readonly IHardware gpu;
+        private int temperature = 0;
 
         public GPU(IHardware gpu)
         {
@@ -22,7 +23,13 @@ namespace GPUFanControl.Models
             get
             {
                 gpu.Update();
-                return (int?)gpu.Sensors[0].Value ?? 0;
+                var newTemperature = gpu.Sensors[0].Value;
+                if (newTemperature.HasValue)
+                {
+                    SetProperty(ref temperature, (int)newTemperature.Value);
+                }
+
+                return temperature;
             }
         }
 
