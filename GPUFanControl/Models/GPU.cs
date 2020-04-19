@@ -1,14 +1,15 @@
-﻿using OpenHardwareMonitor.Hardware;
+﻿using GPUFanControl.ViewModels;
+using OpenHardwareMonitor.Hardware;
 using System;
 
-namespace GPUFanControl.ViewModels
+namespace GPUFanControl.Models
 {
-    public class GPUViewModel : HardwareViewModel
+    public class GPU : HardwareNotifyPropertyChanged
     {
         private readonly IHardware gpu;
         private int temperature = 0;
 
-        public GPUViewModel(IHardware gpu)
+        public GPU(IHardware gpu)
         {
             if (gpu.HardwareType != HardwareType.GpuAti)
             {

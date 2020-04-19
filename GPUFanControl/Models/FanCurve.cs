@@ -5,14 +5,17 @@ using System.Collections.Generic;
 
 namespace GPUFanControl.Models
 {
-    public class FanCurve : HardwareViewModel
+    public class FanCurve : HardwareNotifyPropertyChanged
     {
-        private readonly FanViewModel fan;
+        private readonly Fan fan;
         private bool enabled = false;
+        public delegate void OnEnabledChanged(bool newValue);
+        private OnEnabledChanged onEnabledChanged;
 
-        public FanCurve(ISensor fanSensor)
+        public FanCurve(ISensor fanSensor, OnEnabledChanged onEnabledChanged)
         {
-            fan = new FanViewModel(fanSensor);
+            fan = new Fan(fanSensor);
+            this.onEnabledChanged = onEnabledChanged;
         }
 
         public int Index
@@ -26,7 +29,16 @@ namespace GPUFanControl.Models
         public bool Enabled
         {
             get => enabled;
-            set => SetProperty(ref enabled, value);
+            set
+            {
+                var previousValue = enabled;
+                SetProperty(ref enabled, value);
+
+                if (previousValue != value)
+                {
+                    onEnabledChanged(value);
+                }
+            }
         }
         public List<FanCurvePoint> Points { get; } = new List<FanCurvePoint>
         {
@@ -38,6 +50,7 @@ namespace GPUFanControl.Models
         public override void Update()
         {
             fan.Update();
+            PropertyUpdated(nameof(Speed));
         }
 
         public bool SetPoint(int index, FanCurvePoint newPoint)

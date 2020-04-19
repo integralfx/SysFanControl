@@ -4,12 +4,12 @@ using System;
 
 namespace GPUFanControl.Models
 {
-    public class FanViewModel : HardwareViewModel
+    public class Fan : HardwareNotifyPropertyChanged
     {
         private readonly ISensor sensor;
-        private int speed;
+        private int speed = 0;
 
-        public FanViewModel(ISensor fanSensor)
+        public Fan(ISensor fanSensor)
         {
             if (fanSensor.SensorType != SensorType.Fan)
             {
