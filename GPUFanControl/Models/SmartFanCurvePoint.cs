@@ -17,7 +17,6 @@
                 }
 
                 base.Temperature = value;
-                PropertyUpdated();
             }
         }
         public new int Percent
