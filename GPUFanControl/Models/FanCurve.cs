@@ -9,7 +9,7 @@ namespace GPUFanControl.Models
     {
         private GPU gpu;
         private bool enabled = false;
-        public delegate void OnEnabledChanged(bool newValue);
+        public delegate void OnEnabledChanged();
         private OnEnabledChanged onEnabledChanged;
 
         public FanCurve(ISensor fanSensor, GPU gpu, OnEnabledChanged onEnabledChanged) : 
@@ -34,7 +34,7 @@ namespace GPUFanControl.Models
 
                 if (previousValue != value)
                 {
-                    onEnabledChanged(value);
+                    onEnabledChanged();
                 }
             }
         }

@@ -15,7 +15,7 @@ namespace GPUFanControl.ViewModels
             GPUEnabled = true,
             FanControllerEnabled = true
         };
-        private FanCurve selectedFanCurve;
+        private FanCurve selectedFanCurve, fanCurveToEdit;
         private readonly DispatcherTimer timer = new DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(1.0)
@@ -26,8 +26,17 @@ namespace GPUFanControl.ViewModels
         public BindingList<FanCurve> FanCurves { get; } = new BindingList<FanCurve>();
         public FanCurve SelectedFanCurve
         {
-            get => selectedFanCurve != null && selectedFanCurve.Enabled ? selectedFanCurve : null;
-            set => SetProperty(ref selectedFanCurve, value);
+            get => selectedFanCurve;
+            set
+            {
+                SetProperty(ref selectedFanCurve, value);
+                UpdateFanCurveToEdit();
+            }
+        }
+        public FanCurve FanCurveToEdit
+        {
+            get => fanCurveToEdit;
+            private set => SetProperty(ref fanCurveToEdit, value);
         }
 
         public MainWindowViewModel()
@@ -54,14 +63,19 @@ namespace GPUFanControl.ViewModels
             Dispose(false);
         }
 
-        private void OnEnabledChanged(bool newValue)
+        private void UpdateFanCurveToEdit()
         {
             if (selectedFanCurve == null)
             {
                 return;
             }
 
-            PropertyUpdated(nameof(SelectedFanCurve));
+            FanCurveToEdit = selectedFanCurve.Enabled ? selectedFanCurve : null;
+        }
+
+        private void OnEnabledChanged()
+        {
+            UpdateFanCurveToEdit();
         }
 
         private void timer_Tick(object sender, EventArgs e)
