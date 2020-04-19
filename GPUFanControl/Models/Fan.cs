@@ -8,7 +8,7 @@ namespace GPUFanControl.Models
     public class Fan : HardwareNotifyPropertyChanged, IDisposable
     {
         private readonly ISensor fanSensor, fanControlSensor;
-        private int speed = 0, percent = 0;
+        private int speed = 0, percent = 50;
         private bool disposed = false;
 
         public Fan(ISensor fanSensor)
@@ -20,7 +20,8 @@ namespace GPUFanControl.Models
 
             this.fanSensor = fanSensor;
             fanControlSensor = fanSensor.Hardware.Sensors
-                .Where(s => s.SensorType == SensorType.Control && s.Index == fanSensor.Index).First();
+                .Where(s => s.SensorType == SensorType.Control && s.Index == fanSensor.Index)
+                .First();
             percent = (int)fanControlSensor.Control.SoftwareValue;
         }
 
