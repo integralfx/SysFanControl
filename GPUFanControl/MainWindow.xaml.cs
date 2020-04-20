@@ -1,5 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using GPUFanControl.ViewModels;
+using System.Windows;
+using System;
 
 namespace GPUFanControl
 {
@@ -8,7 +10,15 @@ namespace GPUFanControl
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            try
+            {
+                DataContext = new MainWindowViewModel();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+            }
         }
     }
 }
