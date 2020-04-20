@@ -23,7 +23,7 @@ namespace GPUFanControl.ViewModels
         private bool disposed = false;
 
         public GPU GPU { get; }
-        public BindingList<FanCurve> FanCurves { get; } = new BindingList<FanCurve>();>
+        public BindingList<FanCurve> FanCurves { get; } = new BindingList<FanCurve>();
         public FanCurve SelectedFanCurve
         {
             get => selectedFanCurve;
