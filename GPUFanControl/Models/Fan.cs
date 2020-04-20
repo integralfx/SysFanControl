@@ -50,11 +50,7 @@ namespace GPUFanControl.Models
         public override void Update()
         {
             fanSensor.Hardware.Update();
-            var newSpeed = fanSensor.Value;
-            if (newSpeed.HasValue)
-            {
-                Speed = (int)newSpeed.Value;
-            }
+            Speed = (int?)fanSensor.Value ?? Speed;
         }
 
         public void SetDefault()

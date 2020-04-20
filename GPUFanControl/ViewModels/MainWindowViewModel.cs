@@ -23,7 +23,7 @@ namespace GPUFanControl.ViewModels
         private bool disposed = false;
 
         public GPU GPU { get; }
-        public BindingList<FanCurve> FanCurves { get; } = new BindingList<FanCurve>();
+        public BindingList<FanCurve> FanCurves { get; } = new BindingList<FanCurve>();>
         public FanCurve SelectedFanCurve
         {
             get => selectedFanCurve;
@@ -33,19 +33,47 @@ namespace GPUFanControl.ViewModels
                 UpdateFanCurveToEdit();
             }
         }
+        // SelectedFanCurve must have the curve checkbox checked to be able to edit it.
         public FanCurve FanCurveToEdit
         {
             get => fanCurveToEdit;
             private set => SetProperty(ref fanCurveToEdit, value);
         }
 
+        /// <summary>
+        /// MainWindowViewModel constructor.
+        /// </summary>
+        /// <exception cref="HardwareNotFoundException">
+        /// Thrown when GPU, motherboard or SuperIO could not be found.
+        /// </exception>
         public MainWindowViewModel()
         {
             computer.Open();
 
-            GPU = new GPU(computer.Hardware[1]);
+            if (computer.Hardware.Length == 0)
+            {
+                throw new HardwareNotFoundException("No hardware found. Try running as admin.");
+            }
 
-            var superIO = computer.Hardware[0].SubHardware[0];
+            var gpuHardware = computer.Hardware
+                .Where(h => h.HardwareType == HardwareType.GpuAti || h.HardwareType == HardwareType.GpuNvidia);
+            if (gpuHardware.Count() == 0)
+            {
+                throw new HardwareNotFoundException("No GPU found.");
+            }
+            GPU = new GPU(gpuHardware.First());
+
+            var moboHardware = computer.Hardware.Where(h => h.HardwareType == HardwareType.Mainboard);
+            if (moboHardware.Count() == 0)
+            {
+                throw new HardwareNotFoundException("No motherboard found.");
+            }
+            var superIOHardware = moboHardware.First().SubHardware.Where(h => h.HardwareType == HardwareType.SuperIO);
+            if (superIOHardware.Count() == 0)
+            {
+                throw new HardwareNotFoundException("No SuperIO found.");
+            }
+            var superIO = superIOHardware.First();
             superIO.Update();
 
             var superIOFans = superIO.Sensors.Where(s => s.SensorType == SensorType.Fan).ToList();
@@ -109,6 +137,14 @@ namespace GPUFanControl.ViewModels
                 computer.Close();
 
                 disposed = true;
+            }
+        }
+
+        public class HardwareNotFoundException : Exception
+        {
+            public HardwareNotFoundException(string message) : base(message)
+            {
+
             }
         }
     }

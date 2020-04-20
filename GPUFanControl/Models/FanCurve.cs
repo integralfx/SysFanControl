@@ -51,7 +51,25 @@ namespace GPUFanControl.Models
         }
         public List<SmartFanCurvePoint> Points { get; } = new List<SmartFanCurvePoint>();
 
-        public void AddPoint(FanCurvePoint point)
+        public override void Update()
+        {
+            base.Update();
+
+            if (!enabled)
+            {
+                return;
+            }
+
+            Percent = CalculateFanPercent(gpu.Temperature);
+        }
+
+        /// <summary>
+        /// Add a point.
+        /// </summary>
+        /// <param name="point">
+        /// The point to add. Should be greater than all the points in <see cref="Points"/>.
+        /// </param>
+        private void AddPoint(FanCurvePoint point)
         {
             var previous = Points.Count() > 0 ? Points.Last() : null;
             var current = new SmartFanCurvePoint
@@ -67,38 +85,37 @@ namespace GPUFanControl.Models
             }
         }
 
-        public override void Update()
+        /// <summary>
+        /// Calculate the speed (in percent) that the fan should be at.
+        /// </summary>
+        /// <param name="temperature">Temperature of the hardware that the fan curve is used for.</param>
+        /// <returns>The fan percent.</returns>
+        private int CalculateFanPercent(int temperature)
         {
-            base.Update();
-
-            if (!enabled)
-            {
-                return;
-            }
-
-            var temperature = gpu.Temperature;
             if (temperature < Points.First().Temperature)
             {
-                Percent = Points.First().Percent;
+                return Points.First().Percent;
             }
-            else if (temperature > Points.Last().Temperature)
+            if (temperature > Points.Last().Temperature)
             {
-                Percent = Points.Last().Percent;
+                return Points.Last().Percent;
             }
-            else
+
+            // Find which points the temperature falls between.
+            for (int i = 0; i < Points.Count - 1; i++)
             {
-                for (int i = 0; i < Points.Count - 1; i++)
+                var current = Points[i];
+                var next = Points[i + 1];
+                if (temperature >= current.Temperature && gpu.Temperature <= next.Temperature)
                 {
-                    var current = Points[i];
-                    var next = Points[i + 1];
-                    if (temperature >= current.Temperature && gpu.Temperature <= next.Temperature)
-                    {
-                        var scale = 1.0 * (next.Percent - current.Percent) / (next.Temperature - current.Temperature);
-                        Percent = (int)Math.Round((temperature - current.Temperature) * scale + current.Percent);
-                        break;
-                    }
+                    // Interpolate between the points.
+                    var scale = 1.0 * (next.Percent - current.Percent) / (next.Temperature - current.Temperature);
+                    return (int)Math.Round(scale * (temperature - current.Temperature) + current.Percent);
                 }
             }
+
+            // Should never get here.
+            return Percent;
         }
     }
 }
