@@ -43,7 +43,7 @@ namespace GPUFanControl.ViewModels
         /// <summary>
         /// MainWindowViewModel constructor.
         /// </summary>
-        /// <exception cref="HardwareNotFoundException">
+        /// <exception cref="HardwareNotDetectedException">
         /// Thrown when GPU, motherboard or SuperIO could not be found.
         /// </exception>
         public MainWindowViewModel()
@@ -52,26 +52,26 @@ namespace GPUFanControl.ViewModels
 
             if (computer.Hardware.Length == 0)
             {
-                throw new HardwareNotFoundException("No hardware found. Try running as admin.");
+                throw new HardwareNotDetectedException("No hardware detected. Try running as admin.");
             }
 
             var gpuHardware = computer.Hardware
                 .Where(h => h.HardwareType == HardwareType.GpuAti || h.HardwareType == HardwareType.GpuNvidia);
             if (gpuHardware.Count() == 0)
             {
-                throw new HardwareNotFoundException("No GPU found.");
+                throw new HardwareNotDetectedException("No GPU detected.");
             }
             GPU = new GPU(gpuHardware.First());
 
             var moboHardware = computer.Hardware.Where(h => h.HardwareType == HardwareType.Mainboard);
             if (moboHardware.Count() == 0)
             {
-                throw new HardwareNotFoundException("No motherboard found.");
+                throw new HardwareNotDetectedException("No motherboard detected.");
             }
             var superIOHardware = moboHardware.First().SubHardware.Where(h => h.HardwareType == HardwareType.SuperIO);
             if (superIOHardware.Count() == 0)
             {
-                throw new HardwareNotFoundException("No SuperIO found.");
+                throw new HardwareNotDetectedException("No SuperIO detected.");
             }
             var superIO = superIOHardware.First();
             superIO.Update();
@@ -140,9 +140,9 @@ namespace GPUFanControl.ViewModels
             }
         }
 
-        public class HardwareNotFoundException : Exception
+        public class HardwareNotDetectedException : Exception
         {
-            public HardwareNotFoundException(string message) : base(message)
+            public HardwareNotDetectedException(string message) : base(message)
             {
 
             }
