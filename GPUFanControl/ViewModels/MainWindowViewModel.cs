@@ -37,7 +37,7 @@ namespace GPUFanControl.ViewModels
         /// MainWindowViewModel constructor.
         /// </summary>
         /// <exception cref="HardwareNotDetectedException">
-        /// Thrown when GPU, motherboard or SuperIO could not be found.
+        /// Thrown when GPU, motherboard or SuperIO could not be detected.
         /// </exception>
         public MainWindowViewModel()
         {
