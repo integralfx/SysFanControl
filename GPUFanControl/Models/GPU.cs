@@ -11,7 +11,7 @@ namespace GPUFanControl.Models
 
         public GPU(IHardware gpu)
         {
-            if (gpu.HardwareType != HardwareType.GpuAti || gpu.HardwareType != HardwareType.GpuNvidia)
+            if (gpu.HardwareType != HardwareType.GpuAti && gpu.HardwareType != HardwareType.GpuNvidia)
             {
                 throw new ArgumentException("Argument isn't a GPU.");
             }
