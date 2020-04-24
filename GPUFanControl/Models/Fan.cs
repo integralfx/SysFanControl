@@ -15,7 +15,7 @@ namespace GPUFanControl.Models
         {
             if (fanSensor.SensorType != SensorType.Fan)
             {
-                throw new ArgumentException("fanSensor");
+                throw new ArgumentException("Argument isn't a fan sensor.");
             }
 
             this.fanSensor = fanSensor;
