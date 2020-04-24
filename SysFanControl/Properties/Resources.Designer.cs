@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GPUFanControl.Properties
+namespace SysFanControl.Properties
 {
 
 

@@ -1,9 +1,9 @@
-﻿using GPUFanControl.ViewModels;
+﻿using SysFanControl.ViewModels;
 using OpenHardwareMonitor.Hardware;
 using System;
 using System.Linq;
 
-namespace GPUFanControl.Models
+namespace SysFanControl.Models
 {
     public class Fan : HardwareNotifyPropertyChanged, IDisposable
     {

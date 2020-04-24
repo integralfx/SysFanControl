@@ -1,4 +1,4 @@
-﻿namespace GPUFanControl.Models
+﻿namespace SysFanControl.Models
 {
     public class FanCurvePoint : BaseNotifyPropertyChanged
     {

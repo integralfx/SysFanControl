@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPUFanControl", "GPUFanControl\GPUFanControl.csproj", "{9696BEC3-1A4B-4648-BCDA-E9E95F813A57}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SysFanControl", "SysFanControl\SysFanControl.csproj", "{9696BEC3-1A4B-4648-BCDA-E9E95F813A57}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenHardwareMonitorLib", "..\openhardwaremonitor\OpenHardwareMonitorLib.csproj", "{B0397530-545A-471D-BB74-027AE456DF1A}"
 EndProject

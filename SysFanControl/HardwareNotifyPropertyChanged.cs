@@ -1,4 +1,4 @@
-﻿namespace GPUFanControl.ViewModels
+﻿namespace SysFanControl.ViewModels
 {
     public abstract class HardwareNotifyPropertyChanged : BaseNotifyPropertyChanged
     {

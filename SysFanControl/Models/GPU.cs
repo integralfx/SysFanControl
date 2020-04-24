@@ -1,8 +1,8 @@
-﻿using GPUFanControl.ViewModels;
+﻿using SysFanControl.ViewModels;
 using OpenHardwareMonitor.Hardware;
 using System;
 
-namespace GPUFanControl.Models
+namespace SysFanControl.Models
 {
     public class GPU : HardwareNotifyPropertyChanged
     {

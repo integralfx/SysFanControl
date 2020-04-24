@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GPUFanControl.Models
+namespace SysFanControl.Models
 {
     public class FanCurve : Fan
     {

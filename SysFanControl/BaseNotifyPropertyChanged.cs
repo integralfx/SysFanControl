@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace GPUFanControl
+namespace SysFanControl
 {
     public abstract class BaseNotifyPropertyChanged : INotifyPropertyChanged
     {

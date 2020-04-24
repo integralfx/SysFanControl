@@ -1,9 +1,9 @@
 ﻿using MahApps.Metro.Controls;
-using GPUFanControl.ViewModels;
+using SysFanControl.ViewModels;
 using System.Windows;
 using System;
 
-namespace GPUFanControl
+namespace SysFanControl
 {
     public partial class MainWindow : MetroWindow
     {

@@ -1,11 +1,11 @@
-﻿using GPUFanControl.Models;
+﻿using SysFanControl.Models;
 using OpenHardwareMonitor.Hardware;
 using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Threading;
 
-namespace GPUFanControl.ViewModels
+namespace SysFanControl.ViewModels
 {
     public class MainWindowViewModel : BaseNotifyPropertyChanged, IDisposable
     {
