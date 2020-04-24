@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace GPUFanControl.Models
+namespace GPUFanControl
 {
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    public abstract class BaseNotifyPropertyChanged : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -17,6 +17,11 @@ namespace GPUFanControl.Models
                 return true;
             }
             return false;
+        }
+
+        protected void PropertyUpdated([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

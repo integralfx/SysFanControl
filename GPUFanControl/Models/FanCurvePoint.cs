@@ -1,18 +1,24 @@
 ﻿namespace GPUFanControl.Models
 {
-    public class FanCurvePoint : ViewModelBase
+    public class FanCurvePoint : BaseNotifyPropertyChanged
     {
-        private int _temperature, _percent;
+        private int temperature = 0, percent = 0;
 
         public int Temperature
         {
-            get => _temperature;
-            set => SetProperty(ref _temperature, value);
+            get => temperature;
+            set => SetProperty(ref temperature, value);
         }
         public int Percent
         {
-            get => _percent;
-            set => SetProperty(ref _percent, value);
+            get => percent;
+            set
+            {
+                if (value >= 0 && value <= 100)
+                {
+                    SetProperty(ref percent, value);
+                }
+            }
         }
     }
 }

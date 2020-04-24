@@ -4,36 +4,38 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GPUFanControl"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Background="#252525"
-        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
-        Title="GPU Fan Control" Height="450" Width="800" Closed="MetroWindow_Closed">
-    <Grid>
-        <Label x:Name="labelTemperatureLabel" Content="Temperature:" HorizontalAlignment="Left" Margin="10,10,0,0" 
+        Title="GPU Fan Control" Width="435" Height="300">
+    <Grid Height="270">
+        <Label x:Name="labelGPULabel" Content="GPU:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="labelGPU" Content="{Binding GPU.Name}" HorizontalAlignment="Left" Margin="90,10,0,0" 
                VerticalAlignment="Top"/>
-        <Label x:Name="labelTemperature" Content="" HorizontalAlignment="Left" Margin="94,10,0,0" 
+        <Label x:Name="labelTemperatureLabel" Content="Temperature:" HorizontalAlignment="Left" Margin="10,29,0,0" 
                VerticalAlignment="Top"/>
-        <ListView x:Name="listViewFans" HorizontalAlignment="Left" Height="200" Margin="10,41,0,0" 
-                  VerticalAlignment="Top" Width="204" ItemsSource="{Binding FanCurvesCtrl.FanCurves}" 
-                  SelectedItem="{Binding FanCurvesCtrl.SelectedFanCurve, Mode=TwoWay}" BorderThickness="1">
+        <Label x:Name="labelTemperature" Content="{Binding GPU.Temperature}" 
+               ContentStringFormat="{}{0} °C" HorizontalAlignment="Left" Margin="90,29,0,0" VerticalAlignment="Top"/>
+        <ListView x:Name="listViewFans" HorizontalAlignment="Left" Height="200" Margin="10,60,0,0" 
+                  VerticalAlignment="Top" Width="204" ItemsSource="{Binding FanCurves}" 
+                  SelectedItem="{Binding SelectedFanCurve, Mode=TwoWay}" BorderThickness="1">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Index" DisplayMemberBinding="{Binding Sensor.Index}" Width="50"/>
-                    <GridViewColumn Header="Speed (RPM)" DisplayMemberBinding="{Binding Sensor.Value}" Width="90"/>
+                    <GridViewColumn Header="Index" DisplayMemberBinding="{Binding Index}" Width="50"/>
+                    <GridViewColumn Header="Speed (RPM)" DisplayMemberBinding="{Binding Speed}" Width="90"/>
                     <GridViewColumn Header="Curve" Width="60">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox x:Name="checkBoxCurve" IsChecked="{Binding CurveEnabled, Mode=TwoWay}"
-                                          Tag="{Binding Sensor.Index}" />
+                                <CheckBox x:Name="checkBoxCurve" IsChecked="{Binding Enabled, Mode=TwoWay}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView x:Name="listViewControl" HorizontalAlignment="Left" Height="150" Margin="219,41,0,0" 
-                  VerticalAlignment="Top" Width="204" ItemsSource="{Binding FanCurvesCtrl.SelectedFanCurve.Points}" 
+        <ListView x:Name="listViewControl" HorizontalAlignment="Left" Height="200" Margin="219,60,0,0" 
+                  VerticalAlignment="Top" Width="204" ItemsSource="{Binding SelectedFanCurve.Points}" 
                   BorderThickness="1">
             <ListView.View>
                 <GridView>
