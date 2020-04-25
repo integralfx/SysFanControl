@@ -2,23 +2,23 @@
 {
     public class SmartFanCurvePoint : FanCurvePoint
     {
-        public new int SourceValue
+        public new int Value
         {
-            get => base.SourceValue;
+            get => base.Value;
             set
             {
                 // Current source value must be at least 1 greater than the previous source value.
-                if (PreviousPoint != null && value < PreviousPoint.SourceValue + 1)
+                if (PreviousPoint != null && value < PreviousPoint.Value + 1)
                 {
                     return;
                 }
                 // Current source value must be at least 1 less than the next source value.
-                if (NextPoint != null && value > NextPoint.SourceValue - 1)
+                if (NextPoint != null && value > NextPoint.Value - 1)
                 {
                     return;
                 }
 
-                base.SourceValue = value;
+                base.Value = value;
             }
         }
         public new int Percent

@@ -4,7 +4,7 @@
     {
         private int sourceValue = 0, percent = 0;
 
-        public int SourceValue
+        public int Value
         {
             get => sourceValue;
             set => SetProperty(ref sourceValue, value);

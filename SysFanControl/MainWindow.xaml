@@ -47,7 +47,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <mah:NumericUpDown HasDecimals="False" NumericInputMode="Numbers" Minimum="0" 
-                                                   Maximum="100" Value="{Binding SourceValue, Mode=TwoWay}" />
+                                                   Maximum="100" Value="{Binding Value, Mode=TwoWay}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

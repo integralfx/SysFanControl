@@ -20,9 +20,9 @@ namespace SysFanControl.Models
 
             var points = new List<FanCurvePoint>
             {
-                new FanCurvePoint{ SourceValue = 40, Percent = 50 },
-                new FanCurvePoint{ SourceValue = 50, Percent = 75 },
-                new FanCurvePoint{ SourceValue = 60, Percent = 100 }
+                new FanCurvePoint{ Value = 40, Percent = 50 },
+                new FanCurvePoint{ Value = 50, Percent = 75 },
+                new FanCurvePoint{ Value = 60, Percent = 100 }
             };
             foreach (var point in points)
             {
@@ -75,7 +75,7 @@ namespace SysFanControl.Models
             var previous = Points.Count() > 0 ? Points.Last() : null;
             var current = new SmartFanCurvePoint
             {
-                SourceValue = point.SourceValue,
+                Value = point.Value,
                 Percent = point.Percent,
                 PreviousPoint = previous
             };
@@ -93,11 +93,11 @@ namespace SysFanControl.Models
         /// <returns>The fan percent.</returns>
         private int CalculateFanPercent(float sourceValue)
         {
-            if (sourceValue < Points.First().SourceValue)
+            if (sourceValue < Points.First().Value)
             {
                 return Points.First().Percent;
             }
-            if (sourceValue > Points.Last().SourceValue)
+            if (sourceValue > Points.Last().Value)
             {
                 return Points.Last().Percent;
             }
@@ -107,11 +107,11 @@ namespace SysFanControl.Models
             {
                 var current = Points[i];
                 var next = Points[i + 1];
-                if (sourceValue >= current.SourceValue && source.Value <= next.SourceValue)
+                if (sourceValue >= current.Value && source.Value <= next.Value)
                 {
                     // Interpolate between the points.
-                    var scale = 1.0 * (next.Percent - current.Percent) / (next.SourceValue - current.SourceValue);
-                    return (int)Math.Round(scale * (sourceValue - current.SourceValue) + current.Percent);
+                    var scale = 1.0 * (next.Percent - current.Percent) / (next.Value - current.Value);
+                    return (int)Math.Round(scale * (sourceValue - current.Value) + current.Percent);
                 }
             }
 
