@@ -115,11 +115,6 @@ namespace SysFanControl.ViewModels
             }
         }
 
-        private void SelectedHardware_Changed(object sender, SelectionChangedEventArgs e)
-        {
-            PropertyUpdated(nameof(SelectedHardware));
-        }
-
         public void Dispose()
         {
             Dispose(true);
