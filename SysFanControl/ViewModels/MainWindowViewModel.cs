@@ -22,7 +22,7 @@ namespace SysFanControl.ViewModels
         };
         private bool disposed = false;
 
-        public GPU GPU { get; }
+        public FanCurveSource FanCurveSource { get; }
         public BindingList<FanCurve> FanCurves { get; } = new BindingList<FanCurve>();
         public FanCurve SelectedFanCurve
         {
@@ -54,7 +54,7 @@ namespace SysFanControl.ViewModels
             {
                 throw new HardwareNotDetectedException("No GPU detected.");
             }
-            GPU = new GPU(gpuHardware.First());
+            FanCurveSource = new FanCurveSource(gpuHardware.First().Sensors[0]);
 
             var moboHardware = computer.Hardware.Where(h => h.HardwareType == HardwareType.Mainboard);
             if (moboHardware.Count() == 0)
@@ -72,7 +72,7 @@ namespace SysFanControl.ViewModels
             var superIOFans = superIO.Sensors.Where(s => s.SensorType == SensorType.Fan).ToList();
             foreach (var fanSensor in superIOFans)
             {
-                FanCurves.Add(new FanCurve(fanSensor, GPU, OnEnabledChanged));
+                FanCurves.Add(new FanCurve(fanSensor, FanCurveSource, OnEnabledChanged));
             }
 
             timer.Tick += timer_Tick;
@@ -91,7 +91,7 @@ namespace SysFanControl.ViewModels
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            GPU.Update();
+            PropertyUpdated(nameof(FanCurveSource));
             foreach (var fanCurve in FanCurves)
             {
                 fanCurve.Update();

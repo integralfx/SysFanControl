@@ -7,22 +7,22 @@ namespace SysFanControl.Models
 {
     public class FanCurve : Fan
     {
-        private readonly GPU gpu;
+        private readonly FanCurveSource source;
         private bool enabled = false;
         public delegate void OnEnabledChanged();
         private readonly OnEnabledChanged onEnabledChanged;
 
-        public FanCurve(ISensor fanSensor, GPU gpu, OnEnabledChanged onEnabledChanged) : 
+        public FanCurve(ISensor fanSensor, FanCurveSource source, OnEnabledChanged onEnabledChanged) : 
             base(fanSensor)
         {
-            this.gpu = gpu;
+            this.source = source;
             this.onEnabledChanged = onEnabledChanged;
 
             var points = new List<FanCurvePoint>
             {
-                new FanCurvePoint{ Temperature = 40, Percent = 50 },
-                new FanCurvePoint{ Temperature = 50, Percent = 75 },
-                new FanCurvePoint{ Temperature = 60, Percent = 100 }
+                new FanCurvePoint{ SourceValue = 40, Percent = 50 },
+                new FanCurvePoint{ SourceValue = 50, Percent = 75 },
+                new FanCurvePoint{ SourceValue = 60, Percent = 100 }
             };
             foreach (var point in points)
             {
@@ -54,13 +54,14 @@ namespace SysFanControl.Models
         public override void Update()
         {
             base.Update();
+            source.Update();
 
             if (!enabled)
             {
                 return;
             }
 
-            Percent = CalculateFanPercent(gpu.Temperature);
+            Percent = CalculateFanPercent(source.Value);
         }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace SysFanControl.Models
             var previous = Points.Count() > 0 ? Points.Last() : null;
             var current = new SmartFanCurvePoint
             {
-                Temperature = point.Temperature,
+                SourceValue = point.SourceValue,
                 Percent = point.Percent,
                 PreviousPoint = previous
             };
@@ -88,15 +89,15 @@ namespace SysFanControl.Models
         /// <summary>
         /// Calculate the speed (in percent) that the fan should be at.
         /// </summary>
-        /// <param name="temperature">Temperature of the hardware that the fan curve is used for.</param>
+        /// <param name="sourceValue">Value of the sensor that the fan curve is used for.</param>
         /// <returns>The fan percent.</returns>
-        private int CalculateFanPercent(int temperature)
+        private int CalculateFanPercent(float sourceValue)
         {
-            if (temperature < Points.First().Temperature)
+            if (sourceValue < Points.First().SourceValue)
             {
                 return Points.First().Percent;
             }
-            if (temperature > Points.Last().Temperature)
+            if (sourceValue > Points.Last().SourceValue)
             {
                 return Points.Last().Percent;
             }
@@ -106,11 +107,11 @@ namespace SysFanControl.Models
             {
                 var current = Points[i];
                 var next = Points[i + 1];
-                if (temperature >= current.Temperature && gpu.Temperature <= next.Temperature)
+                if (sourceValue >= current.SourceValue && source.Value <= next.SourceValue)
                 {
                     // Interpolate between the points.
-                    var scale = 1.0 * (next.Percent - current.Percent) / (next.Temperature - current.Temperature);
-                    return (int)Math.Round(scale * (temperature - current.Temperature) + current.Percent);
+                    var scale = 1.0 * (next.Percent - current.Percent) / (next.SourceValue - current.SourceValue);
+                    return (int)Math.Round(scale * (sourceValue - current.SourceValue) + current.Percent);
                 }
             }
 

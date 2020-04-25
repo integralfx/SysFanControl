@@ -66,9 +66,11 @@
     </ApplicationDefinition>
     <Compile Include="BaseNotifyPropertyChanged.cs" />
     <Compile Include="Models\FanCurve.cs" />
+    <Compile Include="Models\FanCurveSource.cs" />
     <Compile Include="Models\GPU.cs" />
     <Compile Include="HardwareNotifyPropertyChanged.cs" />
     <Compile Include="Models\SmartFanCurvePoint.cs" />
+    <Compile Include="SensorTypeConverter.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
