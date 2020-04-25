@@ -11,7 +11,7 @@ namespace SysFanControl.Models
 
         public FanCurveSource(ISensor sensor)
         {
-            if (!(sensor.SensorType == SensorType.Temperature || sensor.SensorType == SensorType.Power))
+            if (!IsSensorAllowed(sensor))
             {
                 throw new ArgumentException("Sensor type must be temperature or power.");
             }
@@ -35,6 +35,11 @@ namespace SysFanControl.Models
             {
                 Value = newValue.Value;
             }
+        }
+
+        static public bool IsSensorAllowed(ISensor sensor)
+        {
+            return sensor.SensorType == SensorType.Temperature || sensor.SensorType == SensorType.Power;
         }
     }
 }

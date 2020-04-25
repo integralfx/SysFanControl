@@ -30,7 +30,7 @@
                 <ComboBox Grid.Row="0" Grid.ColumnSpan="2" ItemsSource="{Binding Hardware}" DisplayMemberPath="Name"
                           SelectedItem="{Binding SelectedHardware}" />
 
-                <ComboBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedHardware.Sensors}" 
+                <ComboBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedHardwareSensors}" 
                           DisplayMemberPath="Name" SelectedItem="{Binding SelectedSensor}" />
 
                 <Label Grid.Row="2" Grid.Column="0"

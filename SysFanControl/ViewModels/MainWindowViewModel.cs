@@ -4,7 +4,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace SysFanControl.ViewModels
@@ -14,11 +13,14 @@ namespace SysFanControl.ViewModels
         private readonly Computer computer = new Computer
         {
             MainboardEnabled = true,
+            CPUEnabled = true,
             GPUEnabled = true,
             FanControllerEnabled = true
         };
+        private IHardware superIO;
         private FanCurve selectedFanCurve;
         private IHardware selectedHardware;
+        private ObservableCollection<ISensor> selectedHardwareSensors;
         private ISensor selectedSensor;
         private readonly DispatcherTimer timer = new DispatcherTimer
         {
@@ -30,7 +32,30 @@ namespace SysFanControl.ViewModels
         public IHardware SelectedHardware
         {
             get => selectedHardware;
-            set => SetProperty(ref selectedHardware, value);
+            set
+            {
+                SetProperty(ref selectedHardware, value);
+                if (selectedHardware != null)
+                {
+                    if (selectedHardware.HardwareType == HardwareType.Mainboard)
+                    {
+                        SelectedHardwareSensors = new ObservableCollection<ISensor>(
+                            superIO.Sensors.Where(FanCurveSource.IsSensorAllowed)
+                        );
+                    }
+                    else
+                    {
+                        SelectedHardwareSensors = new ObservableCollection<ISensor>(
+                            selectedHardware.Sensors.Where(FanCurveSource.IsSensorAllowed)
+                        );
+                    }
+                }
+            }
+        }
+        public ObservableCollection<ISensor> SelectedHardwareSensors
+        {
+            get => selectedHardwareSensors;
+            private set => SetProperty(ref selectedHardwareSensors, value);
         }
         public ISensor SelectedSensor
         {
@@ -83,7 +108,7 @@ namespace SysFanControl.ViewModels
             {
                 throw new HardwareNotDetectedException("No SuperIO detected.");
             }
-            var superIO = superIOHardware.First();
+            superIO = superIOHardware.First();
             superIO.Update();
 
             var superIOFans = superIO.Sensors.Where(s => s.SensorType == SensorType.Fan).ToList();
