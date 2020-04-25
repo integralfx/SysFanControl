@@ -17,7 +17,7 @@ namespace SysFanControl.ViewModels
             GPUEnabled = true,
             FanControllerEnabled = true
         };
-        private IHardware superIO;
+        private readonly IHardware superIO;
         private FanCurve selectedFanCurve;
         private IHardware selectedHardware;
         private ObservableCollection<ISensor> selectedHardwareSensors;
