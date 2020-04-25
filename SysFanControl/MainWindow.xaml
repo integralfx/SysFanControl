@@ -42,7 +42,7 @@
                   BorderThickness="1">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Temperature" Width="100">
+                    <GridViewColumn Header="Value" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <mah:NumericUpDown HasDecimals="False" NumericInputMode="Numbers" Minimum="0" 
