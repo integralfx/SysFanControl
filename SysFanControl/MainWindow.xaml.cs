@@ -1,7 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using SysFanControl.ViewModels;
-using System.Windows;
 using System;
+using System.Windows;
 
 namespace SysFanControl
 {

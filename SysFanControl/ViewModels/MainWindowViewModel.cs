@@ -1,8 +1,10 @@
 ﻿using SysFanControl.Models;
 using OpenHardwareMonitor.Hardware;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace SysFanControl.ViewModels
@@ -16,12 +18,25 @@ namespace SysFanControl.ViewModels
             FanControllerEnabled = true
         };
         private FanCurve selectedFanCurve;
+        private IHardware selectedHardware;
+        private ISensor selectedSensor;
         private readonly DispatcherTimer timer = new DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(1.0)
         };
         private bool disposed = false;
 
+        public ObservableCollection<IHardware> Hardware { get; }
+        public IHardware SelectedHardware
+        {
+            get => selectedHardware;
+            set => SetProperty(ref selectedHardware, value);
+        }
+        public ISensor SelectedSensor
+        {
+            get => selectedSensor;
+            set => SetProperty(ref selectedSensor, value);
+        }
         public FanCurveSource FanCurveSource { get; }
         public BindingList<FanCurve> FanCurves { get; } = new BindingList<FanCurve>();
         public FanCurve SelectedFanCurve
@@ -47,6 +62,8 @@ namespace SysFanControl.ViewModels
             {
                 throw new HardwareNotDetectedException("No hardware detected. Try running as admin.");
             }
+
+            Hardware = new ObservableCollection<IHardware>(computer.Hardware);
 
             var gpuHardware = computer.Hardware
                 .Where(h => h.HardwareType == HardwareType.GpuAti || h.HardwareType == HardwareType.GpuNvidia);
@@ -96,6 +113,11 @@ namespace SysFanControl.ViewModels
             {
                 fanCurve.Update();
             }
+        }
+
+        private void SelectedHardware_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            PropertyUpdated(nameof(SelectedHardware));
         }
 
         public void Dispose()

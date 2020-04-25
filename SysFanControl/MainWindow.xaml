@@ -8,59 +8,81 @@
         mc:Ignorable="d"
         Background="#252525"
         ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
-        Title="Sys Fan Control" Width="435" Height="300">
+        Title="Sys Fan Control" Width="435" Height="380">
     <mah:MetroWindow.Resources>
         <local:SensorTypeConverter x:Key="SensorTypeConverter" />
     </mah:MetroWindow.Resources>
-    <Grid Height="270">
-        <Label x:Name="labelSourceNameLabel" Content="Source Name:" HorizontalAlignment="Left" Margin="10,10,0,0" 
-               VerticalAlignment="Top"/>
-        <Label x:Name="labelSourceName" Content="{Binding FanCurveSource.Name}" HorizontalAlignment="Left" 
-               Margin="90,10,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="labelSourceValueLabel" Content="Source Value:" HorizontalAlignment="Left" Margin="10,29,0,0" 
-               VerticalAlignment="Top"/>
-        <Label x:Name="labelSourceValue" HorizontalAlignment="Left" Margin="90,29,0,0" VerticalAlignment="Top"
-               Content="{Binding FanCurveSource, Converter={StaticResource SensorTypeConverter}}" />
-        <ListView x:Name="listViewFans" HorizontalAlignment="Left" Height="200" Margin="10,60,0,0" 
+    
+    <StackPanel Orientation="Vertical">
+        <GroupBox Header="Sensors" HorizontalAlignment="Left" Height="120" Margin="10,10,0,0" VerticalAlignment="Top" 
+                  Width="413">
+            <Grid HorizontalAlignment="Left" Height="84" VerticalAlignment="Top" Width="403">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <ComboBox Grid.Row="0" Grid.ColumnSpan="2" ItemsSource="{Binding Hardware}" DisplayMemberPath="Name"
+                          SelectedItem="{Binding SelectedHardware}" />
+
+                <ComboBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedHardware.Sensors}" 
+                          DisplayMemberPath="Name" SelectedItem="{Binding SelectedSensor}" />
+
+                <Label Grid.Row="2" Grid.Column="0"
+                       Content="{Binding FanCurveSource.Name}" ContentStringFormat="{}{0}:" />
+                <Label Grid.Row="2" Grid.Column="1"
+                       Content="{Binding FanCurveSource, Converter={StaticResource SensorTypeConverter}}" />
+            </Grid>
+        </GroupBox>
+        
+        <StackPanel Orientation="Horizontal">
+            <ListView x:Name="listViewFans" HorizontalAlignment="Left" Height="200" Margin="10,10,0,0" 
                   VerticalAlignment="Top" Width="204" ItemsSource="{Binding FanCurves}" 
                   SelectedItem="{Binding SelectedFanCurve, Mode=TwoWay}" BorderThickness="1">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Index" DisplayMemberBinding="{Binding Index}" Width="50"/>
-                    <GridViewColumn Header="Speed (RPM)" DisplayMemberBinding="{Binding Speed}" Width="90"/>
-                    <GridViewColumn Header="Curve" Width="60">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox x:Name="checkBoxCurve" IsChecked="{Binding Enabled, Mode=TwoWay}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <ListView x:Name="listViewControl" HorizontalAlignment="Left" Height="200" Margin="219,60,0,0" 
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Index" DisplayMemberBinding="{Binding Index}" Width="50"/>
+                        <GridViewColumn Header="Speed (RPM)" DisplayMemberBinding="{Binding Speed}" Width="90"/>
+                        <GridViewColumn Header="Curve" Width="60">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox x:Name="checkBoxCurve" IsChecked="{Binding Enabled, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            
+            <ListView x:Name="listViewControl" HorizontalAlignment="Left" Height="200" Margin="5,10,0,0" 
                   VerticalAlignment="Top" Width="204" ItemsSource="{Binding SelectedFanCurve.Points}" 
                   BorderThickness="1">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Value" Width="100">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <mah:NumericUpDown HasDecimals="False" NumericInputMode="Numbers" Minimum="0" 
-                                                   Maximum="100" Value="{Binding Value, Mode=TwoWay}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Percent" Width="100">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <mah:NumericUpDown HasDecimals="False" NumericInputMode="Numbers" Minimum="0"
-                                                   Maximum="100" Value="{Binding Percent, Mode=TwoWay}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-    </Grid>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Value" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <mah:NumericUpDown HasDecimals="False" NumericInputMode="Numbers" Minimum="0" 
+                                                       Maximum="100" Value="{Binding Value, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Percent" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <mah:NumericUpDown HasDecimals="False" NumericInputMode="Numbers" Minimum="0"
+                                                       Maximum="100" Value="{Binding Percent, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
+    </StackPanel>
 </mah:MetroWindow>
