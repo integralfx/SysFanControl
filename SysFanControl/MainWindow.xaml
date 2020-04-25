@@ -13,9 +13,10 @@
         <local:SensorTypeConverter x:Key="SensorTypeConverter" />
     </mah:MetroWindow.Resources>
     <Grid Height="270">
-        <Label x:Name="labelSourceNameLabel" Content="Source Name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="labelSourceName" Content="{Binding FanCurveSource.Name}" HorizontalAlignment="Left" Margin="90,10,0,0" 
+        <Label x:Name="labelSourceNameLabel" Content="Source Name:" HorizontalAlignment="Left" Margin="10,10,0,0" 
                VerticalAlignment="Top"/>
+        <Label x:Name="labelSourceName" Content="{Binding FanCurveSource.Name}" HorizontalAlignment="Left" 
+               Margin="90,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="labelSourceValueLabel" Content="Source Value:" HorizontalAlignment="Left" Margin="10,29,0,0" 
                VerticalAlignment="Top"/>
         <Label x:Name="labelSourceValue" HorizontalAlignment="Left" Margin="90,29,0,0" VerticalAlignment="Top"
