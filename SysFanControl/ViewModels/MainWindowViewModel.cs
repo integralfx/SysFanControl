@@ -133,12 +133,7 @@ namespace SysFanControl.ViewModels
             var superIOFans = superIO.Sensors.Where(s => s.SensorType == SensorType.Fan).ToList();
             foreach (var fanSensor in superIOFans)
             {
-                FanCurves.Add(
-                    new FanCurve(fanSensor, OnEnabledChanged)
-                    //{
-                    //    Source = new FanCurveSource(SelectedSensor)
-                    //}
-                );
+                FanCurves.Add(new FanCurve(fanSensor, OnEnabledChanged));
             }
 
             timer.Tick += timer_Tick;
