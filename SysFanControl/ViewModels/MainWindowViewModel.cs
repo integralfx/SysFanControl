@@ -51,6 +51,11 @@ namespace SysFanControl.ViewModels
                             selectedHardware.Sensors.Where(FanCurveSource.IsSensorAllowed)
                         );
                     }
+
+                    if (SelectedHardwareSensors.Count > 0)
+                    {
+                        SelectedSensor = SelectedHardwareSensors.First();
+                    }
                 }
             }
         }
