@@ -17,7 +17,7 @@ namespace SysFanControl
                 case SensorType.Temperature:
                     return $"{source.Value}°C";
                 case SensorType.Power:
-                    return $"{source.Value}W";
+                    return $"{source.Value:0.00}W";
                 default:
                     return source.Value.ToString();
             }
