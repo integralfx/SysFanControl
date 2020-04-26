@@ -84,12 +84,7 @@ namespace SysFanControl.Models
         private void AddPoint(FanCurvePoint point)
         {
             var previous = Points.Count() > 0 ? Points.Last() : null;
-            var current = new SmartFanCurvePoint
-            {
-                Value = point.Value,
-                Percent = point.Percent,
-                PreviousPoint = previous
-            };
+            var current = new SmartFanCurvePoint(previous, point);
             Points.Add(current);
             if (previous != null)
             {

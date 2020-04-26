@@ -2,12 +2,12 @@
 {
     public class FanCurvePoint : BaseNotifyPropertyChanged
     {
-        private int sourceValue = 0, percent = 0;
+        private int value = 0, percent = 0;
 
         public int Value
         {
-            get => sourceValue;
-            set => SetProperty(ref sourceValue, value);
+            get => value;
+            set => SetProperty(ref this.value, value);
         }
         public int Percent
         {
