@@ -58,16 +58,20 @@ namespace SysFanControl.Models
         public override void Update()
         {
             base.Update();
-            source?.Update();
+            if (Source != null)
+            {
+                Source.Update();
+                PropertyUpdated(nameof(Source));
+            }
 
             if (!enabled)
             {
                 return;
             }
 
-            if (source != null)
+            if (Source != null)
             {
-                Percent = CalculateFanPercent(source.Value);
+                Percent = CalculateFanPercent(Source.Value);
             }
         }
 
