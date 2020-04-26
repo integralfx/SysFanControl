@@ -38,7 +38,7 @@ namespace SysFanControl.Models
             }
         }
 
-        static public bool IsSensorAllowed(ISensor sensor)
+        public static bool IsSensorAllowed(ISensor sensor)
         {
             return sensor.SensorType == SensorType.Temperature || sensor.SensorType == SensorType.Power;
         }
