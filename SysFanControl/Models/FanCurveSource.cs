@@ -17,6 +17,7 @@ namespace SysFanControl.Models
             }
 
             this.sensor = sensor;
+            Update();
         }
 
         public string Name { get => sensor.Name; }
