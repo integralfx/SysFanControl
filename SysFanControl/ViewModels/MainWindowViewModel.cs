@@ -18,10 +18,10 @@ namespace SysFanControl.ViewModels
             FanControllerEnabled = true
         };
         private readonly IHardware superIO;
-        private FanCurve selectedFanCurve;
         private IHardware selectedHardware;
         private ObservableCollection<ISensor> selectedHardwareSensors;
         private ISensor selectedSensor;
+        private FanCurve selectedFanCurve;
         private readonly DispatcherTimer timer = new DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(1.0)
@@ -60,9 +60,15 @@ namespace SysFanControl.ViewModels
         public ISensor SelectedSensor
         {
             get => selectedSensor;
-            set => SetProperty(ref selectedSensor, value);
+            set
+            {
+                SetProperty(ref selectedSensor, value);
+                if (SelectedFanCurve != null)
+                {
+                    SelectedFanCurve.Source = new FanCurveSource(selectedSensor);
+                }
+            }
         }
-        public FanCurveSource FanCurveSource { get; }
         public BindingList<FanCurve> FanCurves { get; } = new BindingList<FanCurve>();
         public FanCurve SelectedFanCurve
         {
@@ -96,7 +102,8 @@ namespace SysFanControl.ViewModels
             {
                 throw new HardwareNotDetectedException("No GPU detected.");
             }
-            FanCurveSource = new FanCurveSource(gpuHardware.First().Sensors[0]);
+            SelectedHardware = gpuHardware.First();
+            SelectedSensor = SelectedHardware.Sensors.First();
 
             var moboHardware = computer.Hardware.Where(h => h.HardwareType == HardwareType.Mainboard);
             if (moboHardware.Count() == 0)
@@ -114,7 +121,12 @@ namespace SysFanControl.ViewModels
             var superIOFans = superIO.Sensors.Where(s => s.SensorType == SensorType.Fan).ToList();
             foreach (var fanSensor in superIOFans)
             {
-                FanCurves.Add(new FanCurve(fanSensor, FanCurveSource, OnEnabledChanged));
+                FanCurves.Add(
+                    new FanCurve(fanSensor, OnEnabledChanged)
+                    {
+                        Source = new FanCurveSource(SelectedSensor)
+                    }
+                );
             }
 
             timer.Tick += timer_Tick;
@@ -133,7 +145,6 @@ namespace SysFanControl.ViewModels
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            PropertyUpdated(nameof(FanCurveSource));
             foreach (var fanCurve in FanCurves)
             {
                 fanCurve.Update();

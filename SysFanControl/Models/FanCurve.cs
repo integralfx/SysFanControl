@@ -7,15 +7,14 @@ namespace SysFanControl.Models
 {
     public class FanCurve : Fan
     {
-        private readonly FanCurveSource source;
+        private FanCurveSource source;
         private bool enabled = false;
         public delegate void OnEnabledChanged();
         private readonly OnEnabledChanged onEnabledChanged;
 
-        public FanCurve(ISensor fanSensor, FanCurveSource source, OnEnabledChanged onEnabledChanged) : 
+        public FanCurve(ISensor fanSensor, OnEnabledChanged onEnabledChanged) : 
             base(fanSensor)
         {
-            this.source = source;
             this.onEnabledChanged = onEnabledChanged;
 
             var points = new List<FanCurvePoint>
@@ -50,18 +49,26 @@ namespace SysFanControl.Models
             }
         }
         public List<SmartFanCurvePoint> Points { get; } = new List<SmartFanCurvePoint>();
+        public FanCurveSource Source
+        {
+            get => source;
+            set => SetProperty(ref source, value);
+        }
 
         public override void Update()
         {
             base.Update();
-            source.Update();
+            source?.Update();
 
             if (!enabled)
             {
                 return;
             }
 
-            Percent = CalculateFanPercent(source.Value);
+            if (source != null)
+            {
+                Percent = CalculateFanPercent(source.Value);
+            }
         }
 
         /// <summary>
