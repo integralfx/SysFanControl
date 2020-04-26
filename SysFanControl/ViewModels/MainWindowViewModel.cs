@@ -165,6 +165,12 @@ namespace SysFanControl.ViewModels
             {
                 fanCurve.Update();
             }
+
+            if (SelectedSensor != null)
+            {
+                SelectedSensor.Hardware.Update();
+                PropertyUpdated(nameof(SelectedSensor));
+            }
         }
 
         public void Dispose()
