@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Background="#252525"
         ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
-        Title="Sys Fan Control" Width="435" Height="380">
+        Title="{Binding Title}" Width="435" Height="380">
     <mah:MetroWindow.Resources>
         <local:SensorTypeConverter x:Key="SensorTypeConverter" />
     </mah:MetroWindow.Resources>

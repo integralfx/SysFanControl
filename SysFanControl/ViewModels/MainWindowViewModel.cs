@@ -28,6 +28,8 @@ namespace SysFanControl.ViewModels
         };
         private bool disposed = false;
 
+        public string Version { get => "0.2.0"; }
+        public string Title { get => $"Sys Fan Control v{Version}"; }
         public ObservableCollection<IHardware> Hardware { get; }
         public IHardware SelectedHardware
         {
