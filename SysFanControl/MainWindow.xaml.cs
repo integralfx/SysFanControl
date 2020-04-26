@@ -16,7 +16,7 @@ namespace SysFanControl
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"{e.Message}\n{e.StackTrace}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
             }
         }
