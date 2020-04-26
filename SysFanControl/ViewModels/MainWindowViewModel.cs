@@ -52,7 +52,7 @@ namespace SysFanControl.ViewModels
                         );
                     }
 
-                    if (SelectedHardwareSensors.Count > 0)
+                    if (SelectedSensor == null)
                     {
                         SelectedSensor = SelectedHardwareSensors.First();
                     }
@@ -135,9 +135,9 @@ namespace SysFanControl.ViewModels
             {
                 FanCurves.Add(
                     new FanCurve(fanSensor, OnEnabledChanged)
-                    {
-                        Source = new FanCurveSource(SelectedSensor)
-                    }
+                    //{
+                    //    Source = new FanCurveSource(SelectedSensor)
+                    //}
                 );
             }
 
@@ -153,7 +153,7 @@ namespace SysFanControl.ViewModels
         private void OnEnabledChanged(FanCurve sender)
         {
             // Checked curve, so update the source with the currently selected sensor.
-            if (sender.Enabled)
+            if (sender.Enabled && sender.Source == null)
             {
                 sender.Source = SelectedSensor != null ? new FanCurveSource(SelectedSensor) : null;
             }
