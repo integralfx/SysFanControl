@@ -6,7 +6,6 @@ namespace SysFanControl.Models
 {
     public class FanCurveSource : HardwareNotifyPropertyChanged
     {
-        private readonly ISensor sensor;
         private float value = 0.0f;
 
         public FanCurveSource(ISensor sensor)
@@ -16,22 +15,23 @@ namespace SysFanControl.Models
                 throw new ArgumentException("Sensor type must be temperature or power.");
             }
 
-            this.sensor = sensor;
+            Sensor = sensor;
             Update();
         }
 
-        public string Name { get => sensor.Name; }
+        public string Name { get => Sensor.Name; }
         public float Value
         {
             get => value;
             private set => SetProperty(ref this.value, value);
         }
-        public SensorType Type { get => sensor.SensorType; }
+        public SensorType Type { get => Sensor.SensorType; }
+        public ISensor Sensor { get; }
 
         public override void Update()
         {
-            sensor.Hardware.Update();
-            var newValue = sensor.Value;
+            Sensor.Hardware.Update();
+            var newValue = Sensor.Value;
             if (newValue.HasValue)
             {
                 Value = newValue.Value;

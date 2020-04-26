@@ -67,7 +67,7 @@ namespace SysFanControl.ViewModels
                 SetProperty(ref selectedSensor, value);
                 if (SelectedFanCurve != null)
                 {
-                    SelectedFanCurve.Source = new FanCurveSource(selectedSensor);
+                    SelectedFanCurve.Source = selectedSensor != null ? new FanCurveSource(selectedSensor) : null;
                 }
             }
         }
@@ -78,6 +78,11 @@ namespace SysFanControl.ViewModels
             set
             {
                 SetProperty(ref selectedFanCurve, value);
+                if (SelectedFanCurve != null)
+                {
+                    SelectedSensor = SelectedFanCurve.Source.Sensor;
+                    SelectedHardware = SelectedSensor.Hardware;
+                }
             }
         }
 
@@ -140,9 +145,18 @@ namespace SysFanControl.ViewModels
             Dispose(false);
         }
 
-        private void OnEnabledChanged()
+        private void OnEnabledChanged(FanCurve sender)
         {
-            PropertyUpdated(nameof(SelectedFanCurve));
+            // Checked curve, so update the source with the currently selected sensor.
+            if (sender.Enabled)
+            {
+                sender.Source = SelectedSensor != null ? new FanCurveSource(SelectedSensor) : null;
+            }
+
+            if (sender == SelectedFanCurve)
+            {
+                PropertyUpdated(nameof(SelectedFanCurve));
+            }
         }
 
         private void timer_Tick(object sender, EventArgs e)

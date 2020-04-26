@@ -9,7 +9,7 @@ namespace SysFanControl.Models
     {
         private FanCurveSource source;
         private bool enabled = false;
-        public delegate void OnEnabledChanged();
+        public delegate void OnEnabledChanged(FanCurve sender);
         private readonly OnEnabledChanged onEnabledChanged;
 
         public FanCurve(ISensor fanSensor, OnEnabledChanged onEnabledChanged) : 
@@ -44,7 +44,7 @@ namespace SysFanControl.Models
 
                 if (previousValue != value)
                 {
-                    onEnabledChanged();
+                    onEnabledChanged(this);
                 }
             }
         }
