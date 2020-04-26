@@ -20,5 +20,14 @@
                 }
             }
         }
+
+        public static bool operator<(FanCurvePoint lhs, FanCurvePoint rhs)
+        {
+            return lhs.Value < rhs.Value && lhs.Percent <= rhs.Percent;
+        }
+        public static bool operator>(FanCurvePoint lhs, FanCurvePoint rhs)
+        {
+            return lhs.Value > rhs.Value && lhs.Percent >= rhs.Percent;
+        }
     }
 }

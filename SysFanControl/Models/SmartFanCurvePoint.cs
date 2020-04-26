@@ -2,20 +2,22 @@
 
 namespace SysFanControl.Models
 {
+    /// <summary>
+    /// An extension of <see cref="FanCurvePoint"/> that ensures that the current point is between 
+    /// <see cref="PreviousPoint"/> and <see cref="NextPoint"/>.
+    /// </summary>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the current point is not between <see cref="PreviousPoint"/> and <see cref="NextPoint"/>.
+    /// </exception>
     public class SmartFanCurvePoint : FanCurvePoint
     {
         private FanCurvePoint previousPoint, nextPoint;
 
         public SmartFanCurvePoint(FanCurvePoint previousPoint, FanCurvePoint point)
         {
-            if (previousPoint?.Value >= point.Value)
+            if (previousPoint != null && previousPoint > point)
             {
-                throw new ArgumentException("Previous point value must be less than point value.");
-            }
-
-            if (previousPoint?.Percent > point.Percent)
-            {
-                throw new ArgumentException("Previous point percent must be less than or equal to point percent.");
+                throw new ArgumentException("Previous point must be less than point.");
             }
 
             Value = point.Value;
@@ -93,8 +95,7 @@ namespace SysFanControl.Models
                 return true;
             }
 
-            // Previous value must be < current value and previous percent must be <= current percent.
-            if (previousPoint.Value >= Value || previousPoint.Percent > Percent)
+            if (previousPoint > this)
             {
                 return false;
             }
@@ -102,7 +103,6 @@ namespace SysFanControl.Models
             SetProperty(ref this.previousPoint, point, nameof(PreviousPoint));
             return true;
         }
-
         private bool SetNextPoint(FanCurvePoint point)
         {
             var nextPoint = NextPoint ?? point;
@@ -111,8 +111,7 @@ namespace SysFanControl.Models
                 return true;
             }
 
-            // Next value must be > current value and next percent must be >= current percent.
-            if (nextPoint.Value <= Value || nextPoint.Percent < Percent)
+            if (nextPoint < this)
             {
                 return false;
             }
