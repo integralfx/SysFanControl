@@ -34,9 +34,9 @@
                           DisplayMemberPath="Name" SelectedItem="{Binding SelectedSensor}" />
 
                 <Label Grid.Row="2" Grid.Column="0"
-                       Content="{Binding SelectedFanCurve.Source.Name}" ContentStringFormat="{}{0}:" />
+                       Content="{Binding SelectedSensor.Name}" ContentStringFormat="{}{0}:" />
                 <Label Grid.Row="2" Grid.Column="1"
-                       Content="{Binding SelectedFanCurve.Source, Converter={StaticResource SensorTypeConverter}}" />
+                       Content="{Binding SelectedSensor, Converter={StaticResource SensorTypeConverter}}" />
             </Grid>
         </GroupBox>
         
