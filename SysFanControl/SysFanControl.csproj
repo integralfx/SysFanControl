@@ -76,7 +76,7 @@
     <Compile Include="Models\GPU.cs" />
     <Compile Include="HardwareNotifyPropertyChanged.cs" />
     <Compile Include="Models\SmartFanCurvePoint.cs" />
-    <Compile Include="SensorTypeConverter.cs" />
+    <Compile Include="SensorValueConverter.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

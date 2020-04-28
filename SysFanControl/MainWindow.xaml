@@ -10,7 +10,7 @@
         ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
         Title="{Binding Title}" Width="435" Height="380">
     <mah:MetroWindow.Resources>
-        <local:SensorTypeConverter x:Key="SensorTypeConverter" />
+        <local:SensorValueConverter x:Key="SensorValueConverter" />
     </mah:MetroWindow.Resources>
     
     <StackPanel Orientation="Vertical">
@@ -36,7 +36,7 @@
                 <Label Grid.Row="2" Grid.Column="0"
                        Content="{Binding SelectedSensor.Name}" ContentStringFormat="{}{0}:" />
                 <Label Grid.Row="2" Grid.Column="1"
-                       Content="{Binding SelectedSensor, Converter={StaticResource SensorTypeConverter}}" />
+                       Content="{Binding SelectedSensor, Converter={StaticResource SensorValueConverter}}" />
             </Grid>
         </GroupBox>
         

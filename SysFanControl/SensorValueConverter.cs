@@ -6,7 +6,7 @@ using System.Windows.Data;
 namespace SysFanControl
 {
     [ValueConversion(typeof(ISensor), typeof(string))]
-    public class SensorTypeConverter : IValueConverter
+    public class SensorValueConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
