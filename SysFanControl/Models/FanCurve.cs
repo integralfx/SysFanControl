@@ -19,9 +19,9 @@ namespace SysFanControl.Models
 
             var points = new List<FanCurvePoint>
             {
-                new FanCurvePoint{ Value = 40, Percent = 50 },
-                new FanCurvePoint{ Value = 50, Percent = 75 },
-                new FanCurvePoint{ Value = 60, Percent = 100 }
+                new FanCurvePoint{ Value = 40.0M, Percent = 50 },
+                new FanCurvePoint{ Value = 50.0M, Percent = 75 },
+                new FanCurvePoint{ Value = 60.0M, Percent = 100 }
             };
             foreach (var point in points)
             {
@@ -99,11 +99,13 @@ namespace SysFanControl.Models
         /// <returns>The fan percent.</returns>
         private int CalculateFanPercent(float sourceValue)
         {
-            if (sourceValue < Points.First().Value)
+            var sourceVal = (decimal)sourceValue;
+
+            if (sourceVal < Points.First().Value)
             {
                 return Points.First().Percent;
             }
-            if (sourceValue > Points.Last().Value)
+            if (sourceVal > Points.Last().Value)
             {
                 return Points.Last().Percent;
             }
@@ -113,11 +115,11 @@ namespace SysFanControl.Models
             {
                 var current = Points[i];
                 var next = Points[i + 1];
-                if (sourceValue >= current.Value && source.Value <= next.Value)
+                if (sourceVal >= current.Value && (decimal)source.Value <= next.Value)
                 {
                     // Interpolate between the points.
-                    var scale = 1.0 * (next.Percent - current.Percent) / (next.Value - current.Value);
-                    return (int)Math.Round(scale * (sourceValue - current.Value) + current.Percent);
+                    var scale = (next.Percent - current.Percent) / (next.Value - current.Value);
+                    return (int)Math.Round(scale * (sourceVal - current.Value) + current.Percent);
                 }
             }
 

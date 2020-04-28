@@ -2,9 +2,12 @@
 {
     public class FanCurvePoint : BaseNotifyPropertyChanged
     {
-        private int value = 0, percent = 0;
+        protected static readonly int decimalPlaces = 1;
 
-        public int Value
+        private decimal value = 0;
+        private int percent = 0;
+
+        public decimal Value
         {
             get => value;
             set => SetProperty(ref this.value, value);

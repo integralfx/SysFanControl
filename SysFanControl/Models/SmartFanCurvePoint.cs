@@ -11,6 +11,7 @@ namespace SysFanControl.Models
     /// </exception>
     public class SmartFanCurvePoint : FanCurvePoint
     {
+        private static readonly decimal increment = 1.0M / 10.0M * decimalPlaces;
         private FanCurvePoint previousPoint, nextPoint;
 
         public SmartFanCurvePoint(FanCurvePoint previousPoint, FanCurvePoint point)
@@ -25,20 +26,28 @@ namespace SysFanControl.Models
             PreviousPoint = previousPoint;
         }
 
-        public new int Value
+        public new decimal Value
         {
             get => base.Value;
             set
             {
                 // Current value must be greater than previous value.
-                if (value <= PreviousPoint?.Value)
+                if (PreviousPoint != null)
                 {
-                    return;
+                    if (value <= PreviousPoint.Value)
+                    {
+                        base.Value = PreviousPoint.Value + increment;
+                        return;
+                    }
                 }
                 // Current value must be less than next value.
-                if (value >= NextPoint?.Value)
+                if (NextPoint != null)
                 {
-                    return;
+                    if (value >= NextPoint.Value)
+                    {
+                        base.Value = NextPoint.Value - increment;
+                        return;
+                    }
                 }
 
                 base.Value = value;
@@ -50,14 +59,22 @@ namespace SysFanControl.Models
             set
             {
                 // Current percent must be greater than or equal to previous percent.
-                if (value < PreviousPoint?.Percent)
+                if (PreviousPoint != null)
                 {
-                    return;
+                    if (value < PreviousPoint.Percent)
+                    {
+                        base.Percent = PreviousPoint.Percent;
+                        return;
+                    }
                 }
                 // Current percent must be less than or equal to next percent.
-                if (value > NextPoint?.Percent)
+                if (NextPoint != null)
                 {
-                    return;
+                    if (value > NextPoint.Percent)
+                    {
+                        base.Percent = NextPoint.Percent;
+                        return;
+                    }
                 }
 
                 base.Percent = value;
