@@ -2,8 +2,6 @@
 {
     public class FanCurvePoint : BaseNotifyPropertyChanged
     {
-        protected static readonly int decimalPlaces = 1;
-
         private decimal value = 0;
         private int percent = 0;
 
