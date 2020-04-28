@@ -110,7 +110,7 @@ namespace SysFanControl.Models
                 return Points.Last().Percent;
             }
 
-            // Find which points the temperature falls between.
+            // Find which points sourceValue falls between.
             for (int i = 0; i < Points.Count - 1; i++)
             {
                 var current = Points[i];
