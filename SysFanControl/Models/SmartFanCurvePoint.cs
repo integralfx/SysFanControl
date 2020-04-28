@@ -12,7 +12,7 @@ namespace SysFanControl.Models
     public class SmartFanCurvePoint : FanCurvePoint
     {
         private static readonly int decimalPlaces = 1;
-        private static readonly decimal increment = 1.0M / 10.0M * decimalPlaces;
+        private static readonly decimal increment = 0.1M * decimalPlaces;
         private FanCurvePoint previousPoint, nextPoint;
 
         public SmartFanCurvePoint(FanCurvePoint previousPoint, FanCurvePoint point)
