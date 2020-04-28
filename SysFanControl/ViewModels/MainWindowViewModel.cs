@@ -14,6 +14,7 @@ namespace SysFanControl.ViewModels
         {
             MainboardEnabled = true,
             CPUEnabled = true,
+            RAMEnabled = true,
             GPUEnabled = true,
             FanControllerEnabled = true
         };
@@ -106,7 +107,17 @@ namespace SysFanControl.ViewModels
                 throw new HardwareNotDetectedException("No hardware detected. Try running as admin.");
             }
 
-            Hardware = new ObservableCollection<IHardware>(computer.Hardware);
+            Hardware = new ObservableCollection<IHardware>(
+                // Don't show hardware with 0 allowed sensors.
+                computer.Hardware.Where(h =>
+                {
+                    if (h.HardwareType == HardwareType.Mainboard)
+                    {
+                        return true;
+                    }
+                    return h.Sensors.Where(FanCurveSource.IsSensorAllowed).Count() > 0;
+                })
+            );
 
             var gpuHardware = computer.Hardware
                 .Where(h => h.HardwareType == HardwareType.GpuAti || h.HardwareType == HardwareType.GpuNvidia);
