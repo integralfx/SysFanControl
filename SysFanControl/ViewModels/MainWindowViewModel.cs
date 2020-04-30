@@ -102,6 +102,34 @@ namespace SysFanControl.ViewModels
                 throw new HardwareNotDetectedException("No hardware detected. Try running as admin.");
             }
 
+            var moboHardware = computer.Hardware.Where(h => h.HardwareType == HardwareType.Mainboard);
+            if (moboHardware.Count() == 0)
+            {
+                throw new HardwareNotDetectedException("No motherboard detected.");
+            }
+
+            var superIOHardware = moboHardware.First().SubHardware.Where(h => h.HardwareType == HardwareType.SuperIO);
+            if (superIOHardware.Count() == 0)
+            {
+                throw new HardwareNotDetectedException("No SuperIO detected.");
+            }
+
+            var gpuHardware = computer.Hardware
+                .Where(h => h.HardwareType == HardwareType.GpuAti || h.HardwareType == HardwareType.GpuNvidia);
+            if (gpuHardware.Count() == 0)
+            {
+                throw new HardwareNotDetectedException("No GPU detected.");
+            }
+
+            superIO = superIOHardware.First();
+            superIO.Update();
+
+            var superIOFans = superIO.Sensors.Where(s => s.SensorType == SensorType.Fan).ToList();
+            foreach (var fanSensor in superIOFans)
+            {
+                FanCurves.Add(new FanCurve(fanSensor, OnEnabledChanged));
+            }
+
             Hardware = new ObservableCollection<IHardware>(
                 // Don't show hardware with 0 allowed sensors.
                 computer.Hardware.Where(h =>
@@ -113,25 +141,6 @@ namespace SysFanControl.ViewModels
                     return h.Sensors.Where(FanCurveSource.IsSensorAllowed).Count() > 0;
                 })
             );
-
-            var moboHardware = computer.Hardware.Where(h => h.HardwareType == HardwareType.Mainboard);
-            if (moboHardware.Count() == 0)
-            {
-                throw new HardwareNotDetectedException("No motherboard detected.");
-            }
-            var superIOHardware = moboHardware.First().SubHardware.Where(h => h.HardwareType == HardwareType.SuperIO);
-            if (superIOHardware.Count() == 0)
-            {
-                throw new HardwareNotDetectedException("No SuperIO detected.");
-            }
-            superIO = superIOHardware.First();
-            superIO.Update();
-
-            var superIOFans = superIO.Sensors.Where(s => s.SensorType == SensorType.Fan).ToList();
-            foreach (var fanSensor in superIOFans)
-            {
-                FanCurves.Add(new FanCurve(fanSensor, OnEnabledChanged));
-            }
 
             // Create the hardware to sensors mapping.
             foreach (var hw in Hardware)
@@ -149,12 +158,6 @@ namespace SysFanControl.ViewModels
                 hardwareSensorsMapping.Add(hw, sensorCollection);
             }
 
-            var gpuHardware = computer.Hardware
-                .Where(h => h.HardwareType == HardwareType.GpuAti || h.HardwareType == HardwareType.GpuNvidia);
-            if (gpuHardware.Count() == 0)
-            {
-                throw new HardwareNotDetectedException("No GPU detected.");
-            }
             SelectedHardware = gpuHardware.First();
             SelectedHardwareSensors = hardwareSensorsMapping[SelectedHardware];
             SelectedSensor = SelectedHardwareSensors.First();
