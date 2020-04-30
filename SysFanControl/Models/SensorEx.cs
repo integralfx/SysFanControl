@@ -10,7 +10,11 @@ namespace SysFanControl.Models
         }
 
         public ISensor Sensor { get; }
-        public string Name { get => $"{Sensor.Name} {Sensor.SensorType.ToString()}"; }
+        public string Name
+        {
+            get => Sensor.Name.ToLower().StartsWith(Sensor.SensorType.ToString().ToLower()) ?
+                   Sensor.Name : $"{Sensor.Name} {Sensor.SensorType.ToString()}";
+        }
         public float? Value { get => Sensor.Value; }
     }
 }
