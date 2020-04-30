@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Threading;
+using System.Collections.Generic;
 
 namespace SysFanControl.ViewModels
 {
@@ -20,14 +21,16 @@ namespace SysFanControl.ViewModels
         };
         private readonly IHardware superIO;
         private IHardware selectedHardware;
-        private ObservableCollection<ISensor> selectedHardwareSensors;
-        private ISensor selectedSensor;
+        private ObservableCollection<SensorEx> selectedHardwareSensors;
+        private SensorEx selectedSensor;
         private FanCurve selectedFanCurve;
         private readonly DispatcherTimer timer = new DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(1.0)
         };
         private bool disposed = false;
+        private readonly Dictionary<IHardware, ObservableCollection<SensorEx>> hardwareSensorsMapping =
+            new Dictionary<IHardware, ObservableCollection<SensorEx>>();
 
         public string Version { get => "0.2.0"; }
         public string Title { get => $"Sys Fan Control v{Version}"; }
@@ -40,18 +43,7 @@ namespace SysFanControl.ViewModels
                 SetProperty(ref selectedHardware, value);
                 if (selectedHardware != null)
                 {
-                    if (selectedHardware.HardwareType == HardwareType.Mainboard)
-                    {
-                        SelectedHardwareSensors = new ObservableCollection<ISensor>(
-                            superIO.Sensors.Where(FanCurveSource.IsSensorAllowed)
-                        );
-                    }
-                    else
-                    {
-                        SelectedHardwareSensors = new ObservableCollection<ISensor>(
-                            selectedHardware.Sensors.Where(FanCurveSource.IsSensorAllowed)
-                        );
-                    }
+                    SelectedHardwareSensors = hardwareSensorsMapping[selectedHardware];
 
                     if (SelectedSensor == null)
                     {
@@ -60,12 +52,12 @@ namespace SysFanControl.ViewModels
                 }
             }
         }
-        public ObservableCollection<ISensor> SelectedHardwareSensors
+        public ObservableCollection<SensorEx> SelectedHardwareSensors
         {
             get => selectedHardwareSensors;
             private set => SetProperty(ref selectedHardwareSensors, value);
         }
-        public ISensor SelectedSensor
+        public SensorEx SelectedSensor
         {
             get => selectedSensor;
             set
@@ -73,7 +65,7 @@ namespace SysFanControl.ViewModels
                 SetProperty(ref selectedSensor, value);
                 if (SelectedFanCurve != null)
                 {
-                    SelectedFanCurve.Source = selectedSensor != null ? new FanCurveSource(selectedSensor) : null;
+                    SelectedFanCurve.Source = selectedSensor != null ? new FanCurveSource(selectedSensor.Sensor) : null;
                 }
             }
         }
@@ -86,8 +78,11 @@ namespace SysFanControl.ViewModels
                 SetProperty(ref selectedFanCurve, value);
                 if (SelectedFanCurve != null)
                 {
-                    SelectedSensor = SelectedFanCurve.Source.Sensor;
-                    SelectedHardware = SelectedSensor.Hardware;
+                    // Update the selected hardware and sensor with the currently selected fan curve.
+                    SelectedHardware = SelectedFanCurve.Source.Sensor.Hardware;
+                    SelectedSensor = hardwareSensorsMapping[SelectedHardware]
+                        .Where(s => s.Sensor == SelectedFanCurve.Source.Sensor)
+                        .First();
                 }
             }
         }
@@ -119,15 +114,6 @@ namespace SysFanControl.ViewModels
                 })
             );
 
-            var gpuHardware = computer.Hardware
-                .Where(h => h.HardwareType == HardwareType.GpuAti || h.HardwareType == HardwareType.GpuNvidia);
-            if (gpuHardware.Count() == 0)
-            {
-                throw new HardwareNotDetectedException("No GPU detected.");
-            }
-            SelectedHardware = gpuHardware.First();
-            SelectedSensor = SelectedHardware.Sensors.First();
-
             var moboHardware = computer.Hardware.Where(h => h.HardwareType == HardwareType.Mainboard);
             if (moboHardware.Count() == 0)
             {
@@ -147,6 +133,32 @@ namespace SysFanControl.ViewModels
                 FanCurves.Add(new FanCurve(fanSensor, OnEnabledChanged));
             }
 
+            // Create the hardware to sensors mapping.
+            foreach (var hw in Hardware)
+            {
+                var sensorCollection = new ObservableCollection<SensorEx>();
+                var sensors = hw.Sensors.Where(FanCurveSource.IsSensorAllowed);
+                if (hw.HardwareType == HardwareType.Mainboard)
+                {
+                    sensors = superIO.Sensors.Where(FanCurveSource.IsSensorAllowed);
+                }
+                foreach (var sensor in sensors)
+                {
+                    sensorCollection.Add(new SensorEx(sensor));
+                }
+                hardwareSensorsMapping.Add(hw, sensorCollection);
+            }
+
+            var gpuHardware = computer.Hardware
+                .Where(h => h.HardwareType == HardwareType.GpuAti || h.HardwareType == HardwareType.GpuNvidia);
+            if (gpuHardware.Count() == 0)
+            {
+                throw new HardwareNotDetectedException("No GPU detected.");
+            }
+            SelectedHardware = gpuHardware.First();
+            SelectedHardwareSensors = hardwareSensorsMapping[SelectedHardware];
+            SelectedSensor = SelectedHardwareSensors.First();
+
             timer.Tick += timer_Tick;
             timer.Start();
         }
@@ -161,7 +173,7 @@ namespace SysFanControl.ViewModels
             // Checked curve, so update the source with the currently selected sensor.
             if (sender.Enabled && sender.Source == null)
             {
-                sender.Source = SelectedSensor != null ? new FanCurveSource(SelectedSensor) : null;
+                sender.Source = SelectedSensor != null ? new FanCurveSource(SelectedSensor.Sensor) : null;
             }
 
             if (sender == SelectedFanCurve)
@@ -179,7 +191,7 @@ namespace SysFanControl.ViewModels
 
             if (SelectedSensor != null)
             {
-                SelectedSensor.Hardware.Update();
+                SelectedSensor.Sensor.Hardware.Update();
                 PropertyUpdated(nameof(SelectedSensor));
             }
         }

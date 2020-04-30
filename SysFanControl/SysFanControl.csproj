@@ -75,6 +75,7 @@
     <Compile Include="Models\FanCurveSource.cs" />
     <Compile Include="Models\GPU.cs" />
     <Compile Include="HardwareNotifyPropertyChanged.cs" />
+    <Compile Include="Models\SensorEx.cs" />
     <Compile Include="Models\SmartFanCurvePoint.cs" />
     <Compile Include="SensorValueConverter.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
