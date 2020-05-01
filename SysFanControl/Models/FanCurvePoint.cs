@@ -2,12 +2,13 @@
 {
     public class FanCurvePoint : BaseNotifyPropertyChanged
     {
-        private int temperature = 0, percent = 0;
+        private decimal value = 0;
+        private int percent = 0;
 
-        public int Temperature
+        public decimal Value
         {
-            get => temperature;
-            set => SetProperty(ref temperature, value);
+            get => value;
+            set => SetProperty(ref this.value, value);
         }
         public int Percent
         {
@@ -19,6 +20,15 @@
                     SetProperty(ref percent, value);
                 }
             }
+        }
+
+        public static bool operator<(FanCurvePoint lhs, FanCurvePoint rhs)
+        {
+            return lhs.Value < rhs.Value && lhs.Percent <= rhs.Percent;
+        }
+        public static bool operator>(FanCurvePoint lhs, FanCurvePoint rhs)
+        {
+            return lhs.Value > rhs.Value && lhs.Percent >= rhs.Percent;
         }
     }
 }
