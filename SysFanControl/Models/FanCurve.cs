@@ -81,7 +81,7 @@ namespace SysFanControl.Models
         /// <param name="point">
         /// The point to add. Should be greater than all the points in <see cref="Points"/>.
         /// </param>
-        private void AddPoint(FanCurvePoint point)
+        public void AddPoint(FanCurvePoint point)
         {
             var previous = Points.Count() > 0 ? Points.Last() : null;
             var current = new SmartFanCurvePoint(previous, point);

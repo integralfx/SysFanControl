@@ -46,6 +46,7 @@ namespace SysFanControl.Models
                 PropertyUpdated(nameof(Speed));
             }
         }
+        public ISensor Sensor { get => fanSensor; }
 
         public override void Update()
         {
