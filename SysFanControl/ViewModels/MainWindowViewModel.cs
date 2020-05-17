@@ -6,11 +6,15 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Threading;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Windows;
 
 namespace SysFanControl.ViewModels
 {
     public class MainWindowViewModel : BaseNotifyPropertyChanged, IDisposable
     {
+        private const string settingsFile = "SysFanControl.json";
         private readonly Computer computer = new Computer
         {
             MainboardEnabled = true,
@@ -32,7 +36,7 @@ namespace SysFanControl.ViewModels
         private readonly Dictionary<IHardware, ObservableCollection<SensorEx>> hardwareSensorsMapping =
             new Dictionary<IHardware, ObservableCollection<SensorEx>>();
 
-        public string Version { get => "0.2.0"; }
+        public string Version { get => "0.3.0"; }
         public string Title { get => $"Sys Fan Control v{Version}"; }
         public ObservableCollection<IHardware> Hardware { get; }
         public IHardware SelectedHardware
@@ -76,12 +80,14 @@ namespace SysFanControl.ViewModels
             set
             {
                 SetProperty(ref selectedFanCurve, value);
+                // Update the selected hardware and selected sensor with the selected fan curve.
                 if (SelectedFanCurve != null)
                 {
-                    // Update the selected hardware and sensor with the currently selected fan curve.
+                    // Changing SelectedHardware causes Source.Sensor to change to the first sensor.
+                    var sourceSensor = SelectedFanCurve.Source.Sensor;
                     SelectedHardware = SelectedFanCurve.Source.Sensor.Hardware;
                     SelectedSensor = hardwareSensorsMapping[SelectedHardware]
-                        .Where(s => s.Sensor == SelectedFanCurve.Source.Sensor)
+                        .Where(s => s.Sensor == sourceSensor)
                         .First();
                 }
             }
@@ -162,6 +168,8 @@ namespace SysFanControl.ViewModels
             SelectedHardwareSensors = hardwareSensorsMapping[SelectedHardware];
             SelectedSensor = SelectedHardwareSensors.First();
 
+            LoadSettings();
+
             timer.Tick += timer_Tick;
             timer.Start();
         }
@@ -169,6 +177,62 @@ namespace SysFanControl.ViewModels
         ~MainWindowViewModel()
         {
             Dispose(false);
+        }
+
+        private void SaveSettings()
+        {
+            var root = new JObject();
+            foreach (var fanCurve in FanCurves)
+            {
+                root[fanCurve.Sensor.Identifier.ToString()] = FanCurveJSON.Serialise(fanCurve);
+            }
+
+            Console.WriteLine(root.ToString());
+            try
+            {
+                File.WriteAllText(settingsFile, root.ToString());
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(
+                    $"{e.Message}:\n{e.StackTrace}",
+                    "Error: Failed to save settings",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+            }
+        }
+
+        private void LoadSettings()
+        {
+            if (!File.Exists(settingsFile))
+            {
+                return;
+            }
+
+            try
+            {
+                var root = JObject.Parse(File.ReadAllText(settingsFile));
+                var list = root.Properties().Join(
+                    FanCurves, 
+                    p => p.Name, 
+                    f => f.Sensor.Identifier.ToString(), 
+                    (p, f) => new Tuple<JProperty, FanCurve>(p, f)
+                );
+                foreach (var obj in list)
+                {
+                    FanCurveJSON.UpdateFromJSON((JObject)obj.Item1.Value, obj.Item2, Hardware.ToList());
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(
+                    $"{e.Message}:\n{e.StackTrace}",
+                    "Error: Failed to parse settings",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+            }
         }
 
         private void OnEnabledChanged(FanCurve sender)
@@ -217,6 +281,7 @@ namespace SysFanControl.ViewModels
                     }
                 }
 
+                SaveSettings();
                 timer.Stop();
                 computer.Close();
 
