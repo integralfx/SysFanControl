@@ -11,7 +11,7 @@ namespace SysFanControl.Models
         private FanCurveSource source;
         private readonly object mutex = new object();
         private bool enabled = false, forceUpdate = false;
-        private decimal previousValue = 0.0M;
+        private decimal previousValue = -999.0M;
         public delegate void OnEnabledChanged(FanCurve sender);
         private readonly OnEnabledChanged onEnabledChanged;
 
@@ -85,14 +85,27 @@ namespace SysFanControl.Models
                     return;
                 }
 
-                decimal delta = Math.Abs(previousValue - (decimal)Source.Value);
+                if (previousValue == -999.0M)
+                {
+                    previousValue = (decimal)Source.Value;
+                }
+                decimal delta = (decimal)Source.Value - previousValue;
                 lock (mutex)
                 {
-                    if (forceUpdate || delta >= Hysteresis)
+                    if (forceUpdate)
                     {
                         Percent = CalculateFanPercent(Source.Value);
                         previousValue = (decimal)Source.Value;
                         forceUpdate = false;
+                    }
+                    else if (delta > 0.0M)
+                    {
+                        Percent = CalculateFanPercent(Source.Value);
+                    }
+                    else if (delta <= -Hysteresis)
+                    {
+                        Percent = CalculateFanPercent(Source.Value);
+                        previousValue = (decimal)Source.Value;
                     }
                 }
             }
