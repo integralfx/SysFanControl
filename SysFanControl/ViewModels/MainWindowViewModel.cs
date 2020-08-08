@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Windows;
+using System.Reflection;
 
 namespace SysFanControl.ViewModels
 {
@@ -30,7 +31,7 @@ namespace SysFanControl.ViewModels
         private FanCurve selectedFanCurve;
         private readonly DispatcherTimer timer = new DispatcherTimer
         {
-            Interval = TimeSpan.FromSeconds(1.0)
+            Interval = TimeSpan.FromSeconds(2.0)
         };
         private bool disposed = false;
         private readonly Dictionary<IHardware, ObservableCollection<SensorEx>> hardwareSensorsMapping =
@@ -187,7 +188,6 @@ namespace SysFanControl.ViewModels
                 root[fanCurve.Sensor.Identifier.ToString()] = FanCurveJSON.Serialise(fanCurve);
             }
 
-            Console.WriteLine(root.ToString());
             try
             {
                 File.WriteAllText(settingsFile, root.ToString());
