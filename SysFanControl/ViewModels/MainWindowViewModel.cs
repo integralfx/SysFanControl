@@ -37,8 +37,8 @@ namespace SysFanControl.ViewModels
         private readonly Dictionary<IHardware, ObservableCollection<SensorEx>> hardwareSensorsMapping =
             new Dictionary<IHardware, ObservableCollection<SensorEx>>();
 
-        public string Version { get => "0.4.0"; }
-        public string Title { get => $"Sys Fan Control v{Version}"; }
+        public string Version { get => "0.5.0"; }
+        public string Title { get => $"SFC v{Version}"; }
         public ObservableCollection<IHardware> Hardware { get; }
         public IHardware SelectedHardware
         {
