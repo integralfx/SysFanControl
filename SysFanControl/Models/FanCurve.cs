@@ -1,6 +1,7 @@
 ﻿using OpenHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace SysFanControl.Models
@@ -8,7 +9,9 @@ namespace SysFanControl.Models
     public class FanCurve : Fan
     {
         private FanCurveSource source;
-        private bool enabled = false;
+        private readonly object mutex = new object();
+        private bool enabled = false, forceUpdate = false;
+        private decimal previousValue = 0.0M;
         public delegate void OnEnabledChanged(FanCurve sender);
         private readonly OnEnabledChanged onEnabledChanged;
 
@@ -27,6 +30,15 @@ namespace SysFanControl.Models
             {
                 AddPoint(point);
             }
+            Points.ListChanged += (s, e) => 
+            { 
+                lock (mutex)
+                {
+                    forceUpdate = true;
+                }
+            };
+
+            Hysteresis = 2.0M;
         }
 
         public bool Enabled
@@ -48,11 +60,15 @@ namespace SysFanControl.Models
                 }
             }
         }
-        public List<SmartFanCurvePoint> Points { get; } = new List<SmartFanCurvePoint>();
+        public BindingList<SmartFanCurvePoint> Points { get; } = new BindingList<SmartFanCurvePoint>();
         public FanCurveSource Source
         {
             get => source;
             set => SetProperty(ref source, value);
+        }
+        public decimal Hysteresis
+        {
+            get; set;
         }
 
         public override void Update()
@@ -62,16 +78,23 @@ namespace SysFanControl.Models
             {
                 Source.Update();
                 PropertyUpdated(nameof(Source));
-            }
 
-            if (!enabled)
-            {
-                return;
-            }
+                // Only update the sensor value if the curve isn't enabled.
+                if (!enabled)
+                {
+                    return;
+                }
 
-            if (Source != null)
-            {
-                Percent = CalculateFanPercent(Source.Value);
+                decimal delta = Math.Abs(previousValue - (decimal)Source.Value);
+                lock (mutex)
+                {
+                    if (forceUpdate || delta >= Hysteresis)
+                    {
+                        Percent = CalculateFanPercent(Source.Value);
+                        previousValue = (decimal)Source.Value;
+                        forceUpdate = false;
+                    }
+                }
             }
         }
 
