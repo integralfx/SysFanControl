@@ -15,9 +15,9 @@
     </mah:MetroWindow.Resources>
     
     <StackPanel Orientation="Vertical">
-        <GroupBox Header="Sensors" HorizontalAlignment="Left" Height="120" Margin="10,10,0,0" VerticalAlignment="Top" 
+        <GroupBox Header="Sensors" HorizontalAlignment="Left" Height="130" Margin="10,10,0,0" VerticalAlignment="Top" 
                   Width="234">
-            <Grid HorizontalAlignment="Left" Height="84" VerticalAlignment="Top" Width="224">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="224">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -26,17 +26,23 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ComboBox Grid.Row="0" Grid.ColumnSpan="2" ItemsSource="{Binding Hardware}" DisplayMemberPath="Name"
+                <Label Grid.Row="0" Grid.Column="0"
+                       Content="Polling interval:" />
+                <Label Grid.Row="0" Grid.Column="1"
+                       Content="{Binding PollingInterval}" ContentStringFormat="{}{0:F1} seconds" />
+
+                <ComboBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Hardware}" DisplayMemberPath="Name"
                           SelectedItem="{Binding SelectedHardware}" />
 
-                <ComboBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedHardwareSensors}" 
+                <ComboBox Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedHardwareSensors}" 
                           DisplayMemberPath="Name" SelectedItem="{Binding SelectedSensor}" />
 
-                <Label Grid.Row="2" Grid.Column="0"
+                <Label Grid.Row="3" Grid.Column="0"
                        Content="Value:" />
-                <Label Grid.Row="2" Grid.Column="1"
+                <Label Grid.Row="3" Grid.Column="1"
                        Content="{Binding SelectedSensor, Converter={StaticResource SensorValueConverter}}" />
             </Grid>
         </GroupBox>

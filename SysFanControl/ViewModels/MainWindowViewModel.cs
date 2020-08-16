@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Windows;
-using System.Reflection;
 
 namespace SysFanControl.ViewModels
 {
@@ -29,10 +28,7 @@ namespace SysFanControl.ViewModels
         private ObservableCollection<SensorEx> selectedHardwareSensors;
         private SensorEx selectedSensor;
         private FanCurve selectedFanCurve;
-        private readonly DispatcherTimer timer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromSeconds(2.0)
-        };
+        private readonly DispatcherTimer timer;
         private bool disposed = false;
         private readonly Dictionary<IHardware, ObservableCollection<SensorEx>> hardwareSensorsMapping =
             new Dictionary<IHardware, ObservableCollection<SensorEx>>();
@@ -93,6 +89,7 @@ namespace SysFanControl.ViewModels
                 }
             }
         }
+        public double PollingInterval { get; private set; }
 
         /// <summary>
         /// MainWindowViewModel constructor.
@@ -171,6 +168,10 @@ namespace SysFanControl.ViewModels
 
             LoadSettings();
 
+            timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(PollingInterval)
+            };
             timer.Tick += timer_Tick;
             timer.Start();
         }
@@ -187,6 +188,7 @@ namespace SysFanControl.ViewModels
             {
                 root[fanCurve.Sensor.Identifier.ToString()] = FanCurveJSON.Serialise(fanCurve);
             }
+            root["pollingInterval"] = PollingInterval;
 
             try
             {
@@ -222,6 +224,15 @@ namespace SysFanControl.ViewModels
                 foreach (var obj in list)
                 {
                     FanCurveJSON.UpdateFromJSON((JObject)obj.Item1.Value, obj.Item2, Hardware.ToList());
+                }
+
+                if (root.ContainsKey("pollingInterval"))
+                {
+                    PollingInterval = root["pollingInterval"].ToObject<double>();
+                }
+                else
+                {
+                    PollingInterval = 2.0;
                 }
             }
             catch (Exception e)
