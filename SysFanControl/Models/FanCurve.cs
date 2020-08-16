@@ -14,6 +14,7 @@ namespace SysFanControl.Models
         private decimal previousValue = -999.0M;
         public delegate void OnEnabledChanged(FanCurve sender);
         private readonly OnEnabledChanged onEnabledChanged;
+        private DateTime lastUpdateTime = DateTime.Now;
 
         public FanCurve(ISensor fanSensor, OnEnabledChanged onEnabledChanged) : 
             base(fanSensor)
@@ -97,15 +98,25 @@ namespace SysFanControl.Models
                         Percent = CalculateFanPercent(Source.Value);
                         previousValue = (decimal)Source.Value;
                         forceUpdate = false;
+                        lastUpdateTime = DateTime.Now;
                     }
                     else if (delta > 0.0M)
                     {
                         Percent = CalculateFanPercent(Source.Value);
+                        lastUpdateTime = DateTime.Now;
                     }
                     else if (delta <= -Hysteresis)
                     {
                         Percent = CalculateFanPercent(Source.Value);
                         previousValue = (decimal)Source.Value;
+                        lastUpdateTime = DateTime.Now;
+                    }
+                    // If we haven't updated fan speed for more than 10 seconds, do an update.
+                    else if ((DateTime.Now - lastUpdateTime).TotalSeconds >= 10.0)
+                    {
+                        Percent = CalculateFanPercent(Source.Value);
+                        previousValue = (decimal)Source.Value;
+                        lastUpdateTime = DateTime.Now;
                     }
                 }
             }
