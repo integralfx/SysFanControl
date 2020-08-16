@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Background="#252525"
         ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
-        Title="{Binding Title}" Width="255.833" Height="516.833" Icon="./Resources/speedfan.ico" 
+        Title="{Binding Title}" Width="255.833" Height="526.833" Icon="./Resources/speedfan.ico" 
                  StateChanged="MetroWindow_StateChanged" Loaded="MetroWindow_Loaded" WindowState="Minimized">
     <mah:MetroWindow.Resources>
         <local:SensorValueConverter x:Key="SensorValueConverter" />
