@@ -28,7 +28,7 @@ namespace SysFanControl.ViewModels
         private ObservableCollection<SensorEx> selectedHardwareSensors;
         private SensorEx selectedSensor;
         private FanCurve selectedFanCurve;
-        private DispatcherTimer timer;
+        private readonly DispatcherTimer timer;
         private bool disposed = false;
         private readonly Dictionary<IHardware, ObservableCollection<SensorEx>> hardwareSensorsMapping =
             new Dictionary<IHardware, ObservableCollection<SensorEx>>();
