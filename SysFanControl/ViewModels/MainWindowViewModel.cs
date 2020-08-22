@@ -28,10 +28,11 @@ namespace SysFanControl.ViewModels
         private ObservableCollection<SensorEx> selectedHardwareSensors;
         private SensorEx selectedSensor;
         private FanCurve selectedFanCurve;
-        private readonly DispatcherTimer timer;
+        private DispatcherTimer timer;
         private bool disposed = false;
         private readonly Dictionary<IHardware, ObservableCollection<SensorEx>> hardwareSensorsMapping =
             new Dictionary<IHardware, ObservableCollection<SensorEx>>();
+        private double pollingInterval;
 
         public string Version { get => "0.5.0"; }
         public string Title { get => $"SFC v{Version}"; }
@@ -89,7 +90,18 @@ namespace SysFanControl.ViewModels
                 }
             }
         }
-        public double PollingInterval { get; private set; }
+        public double PollingInterval
+        { 
+            get => pollingInterval; 
+            set 
+            {
+                SetProperty(ref pollingInterval, value);
+
+                timer.Stop();
+                timer.Interval = TimeSpan.FromSeconds(value);
+                timer.Start();
+            }
+        }
 
         /// <summary>
         /// MainWindowViewModel constructor.
@@ -220,11 +232,11 @@ namespace SysFanControl.ViewModels
 
                 if (root.ContainsKey("pollingInterval"))
                 {
-                    PollingInterval = root["pollingInterval"].ToObject<double>();
+                    pollingInterval = root["pollingInterval"].ToObject<double>();
                 }
                 else
                 {
-                    PollingInterval = 2.0;
+                    pollingInterval = 2.0;
                 }
 
                 // Load the fan curves.

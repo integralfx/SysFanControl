@@ -31,8 +31,9 @@
 
                 <Label Grid.Row="0" Grid.Column="0"
                        Content="Polling interval:" />
-                <Label Grid.Row="0" Grid.Column="1"
-                       Content="{Binding PollingInterval}" ContentStringFormat="{}{0:F1} seconds" />
+                <mah:NumericUpDown Grid.Row="0" Grid.Column="1" HasDecimals="True" NumericInputMode="All" 
+                                   StringFormat="F1" Minimum="0.5" Maximum="10" Interval="0.5" 
+                                   Value="{Binding PollingInterval, Mode=TwoWay}" />
 
                 <ComboBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Hardware}" DisplayMemberPath="Name"
                           SelectedItem="{Binding SelectedHardware}" />
