@@ -28,16 +28,14 @@ namespace SysFanControl.ViewModels
         private ObservableCollection<SensorEx> selectedHardwareSensors;
         private SensorEx selectedSensor;
         private FanCurve selectedFanCurve;
-        private readonly DispatcherTimer timer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromSeconds(1.0)
-        };
+        private readonly DispatcherTimer timer;
         private bool disposed = false;
         private readonly Dictionary<IHardware, ObservableCollection<SensorEx>> hardwareSensorsMapping =
             new Dictionary<IHardware, ObservableCollection<SensorEx>>();
+        private double pollingInterval;
 
-        public string Version { get => "0.4.0"; }
-        public string Title { get => $"Sys Fan Control v{Version}"; }
+        public string Version { get => "0.5.0"; }
+        public string Title { get => $"SFC v{Version}"; }
         public ObservableCollection<IHardware> Hardware { get; }
         public IHardware SelectedHardware
         {
@@ -90,6 +88,18 @@ namespace SysFanControl.ViewModels
                         .Where(s => s.Sensor == sourceSensor)
                         .First();
                 }
+            }
+        }
+        public double PollingInterval
+        { 
+            get => pollingInterval; 
+            set 
+            {
+                SetProperty(ref pollingInterval, value);
+
+                timer.Stop();
+                timer.Interval = TimeSpan.FromSeconds(value);
+                timer.Start();
             }
         }
 
@@ -170,6 +180,10 @@ namespace SysFanControl.ViewModels
 
             LoadSettings();
 
+            timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(PollingInterval)
+            };
             timer.Tick += timer_Tick;
             timer.Start();
         }
@@ -181,13 +195,15 @@ namespace SysFanControl.ViewModels
 
         private void SaveSettings()
         {
-            var root = new JObject();
+            var root = new JObject
+            {
+                ["pollingInterval"] = PollingInterval
+            };
             foreach (var fanCurve in FanCurves)
             {
                 root[fanCurve.Sensor.Identifier.ToString()] = FanCurveJSON.Serialise(fanCurve);
             }
 
-            Console.WriteLine(root.ToString());
             try
             {
                 File.WriteAllText(settingsFile, root.ToString());
@@ -213,6 +229,17 @@ namespace SysFanControl.ViewModels
             try
             {
                 var root = JObject.Parse(File.ReadAllText(settingsFile));
+
+                if (root.ContainsKey("pollingInterval"))
+                {
+                    pollingInterval = root["pollingInterval"].ToObject<double>();
+                }
+                else
+                {
+                    pollingInterval = 2.0;
+                }
+
+                // Load the fan curves.
                 var list = root.Properties().Join(
                     FanCurves, 
                     p => p.Name, 

@@ -8,16 +8,16 @@
         mc:Ignorable="d"
         Background="#252525"
         ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
-        Title="{Binding Title}" Width="435" Height="380" Icon="./Resources/speedfan.ico" 
+        Title="{Binding Title}" Width="255.833" Height="526.833" Icon="./Resources/speedfan.ico" 
                  StateChanged="MetroWindow_StateChanged" Loaded="MetroWindow_Loaded" WindowState="Minimized">
     <mah:MetroWindow.Resources>
         <local:SensorValueConverter x:Key="SensorValueConverter" />
     </mah:MetroWindow.Resources>
     
     <StackPanel Orientation="Vertical">
-        <GroupBox Header="Sensors" HorizontalAlignment="Left" Height="120" Margin="10,10,0,0" VerticalAlignment="Top" 
-                  Width="413">
-            <Grid HorizontalAlignment="Left" Height="84" VerticalAlignment="Top" Width="403">
+        <GroupBox Header="Sensors" HorizontalAlignment="Left" Height="130" Margin="10,10,0,0" VerticalAlignment="Top" 
+                  Width="234">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="224">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -26,33 +26,50 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ComboBox Grid.Row="0" Grid.ColumnSpan="2" ItemsSource="{Binding Hardware}" DisplayMemberPath="Name"
+                <Label Grid.Row="0" Grid.Column="0"
+                       Content="Polling interval:" />
+                <mah:NumericUpDown Grid.Row="0" Grid.Column="1" HasDecimals="True" NumericInputMode="All" 
+                                   StringFormat="F1" Minimum="0.5" Maximum="10" Interval="0.5" 
+                                   Value="{Binding PollingInterval, Mode=TwoWay}" />
+
+                <ComboBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Hardware}" DisplayMemberPath="Name"
                           SelectedItem="{Binding SelectedHardware}" />
 
-                <ComboBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedHardwareSensors}" 
+                <ComboBox Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedHardwareSensors}" 
                           DisplayMemberPath="Name" SelectedItem="{Binding SelectedSensor}" />
 
-                <Label Grid.Row="2" Grid.Column="0"
-                       Content="{Binding SelectedSensor.Name}" ContentStringFormat="{}{0}:" />
-                <Label Grid.Row="2" Grid.Column="1"
+                <Label Grid.Row="3" Grid.Column="0"
+                       Content="Value:" />
+                <Label Grid.Row="3" Grid.Column="1"
                        Content="{Binding SelectedSensor, Converter={StaticResource SensorValueConverter}}" />
             </Grid>
         </GroupBox>
         
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Vertical">
             <ListView x:Name="listViewFans" HorizontalAlignment="Left" Height="200" Margin="10,10,0,0" 
-                  VerticalAlignment="Top" Width="204" ItemsSource="{Binding FanCurves}" 
+                  VerticalAlignment="Top" Width="234" ItemsSource="{Binding FanCurves}" 
                   SelectedItem="{Binding SelectedFanCurve, Mode=TwoWay}" BorderThickness="1">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="#" DisplayMemberBinding="{Binding Index}" Width="30"/>
-                        <GridViewColumn Header="Speed (RPM)" DisplayMemberBinding="{Binding Speed}" Width="100"/>
-                        <GridViewColumn Header="Curve" Width="70">
+                        <GridViewColumn Header="Speed" DisplayMemberBinding="{Binding Speed}" Width="50"/>
+                        <GridViewColumn Header="Curve" Width="50">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <CheckBox x:Name="checkBoxCurve" IsChecked="{Binding Enabled, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Hysteresis" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <mah:NumericUpDown HasDecimals="True" NumericInputMode="All" StringFormat="F1"
+                                                       Minimum="1" Maximum="1000" Interval="0.5" 
+                                                       IsEnabled="{Binding Enabled}"
+                                                       Value="{Binding Hysteresis, Mode=TwoWay}" />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -60,12 +77,12 @@
                 </ListView.View>
             </ListView>
             
-            <ListView x:Name="listViewControl" HorizontalAlignment="Left" Height="200" Margin="5,10,0,0" 
-                  VerticalAlignment="Top" Width="204" ItemsSource="{Binding SelectedFanCurve.Points}" 
+            <ListView x:Name="listViewControl" HorizontalAlignment="Left" Height="125" Margin="10,10,0,0" 
+                  VerticalAlignment="Top" Width="234" ItemsSource="{Binding SelectedFanCurve.Points}" 
                   BorderThickness="1">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Value" Width="100">
+                        <GridViewColumn Header="Value" Width="115">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <mah:NumericUpDown HasDecimals="True" NumericInputMode="All" StringFormat="F1"
@@ -74,7 +91,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Percent" Width="100">
+                        <GridViewColumn Header="Percent" Width="115">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <mah:NumericUpDown HasDecimals="False" NumericInputMode="Numbers" Minimum="0"

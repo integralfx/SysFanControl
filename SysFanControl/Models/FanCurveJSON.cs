@@ -22,6 +22,7 @@ namespace SysFanControl.Models
             {
                 { "enabled", fanCurve.Enabled },
                 { "points", JToken.FromObject(points) },
+                { "hysteresis", fanCurve.Hysteresis }
             };
             if (fanCurve.Source != null)
             {
@@ -33,12 +34,23 @@ namespace SysFanControl.Models
 
         public static void UpdateFromJSON(JObject json, FanCurve fanCurve, List<IHardware> hardware)
         {
-             fanCurve.Enabled = json["enabled"].ToObject<bool>();
-
-            fanCurve.Points.Clear();
-            foreach (var point in ((JArray)json["points"]).ToObject<List<FanCurvePoint>>())
+            if (json.ContainsKey("enabled"))
             {
-                fanCurve.AddPoint(point);
+                fanCurve.Enabled = json["enabled"].ToObject<bool>();
+            }
+
+            if (json.ContainsKey("points"))
+            {
+                fanCurve.Points.Clear();
+                foreach (var point in ((JArray)json["points"]).ToObject<List<FanCurvePoint>>())
+                {
+                    fanCurve.AddPoint(point);
+                }
+            }
+
+            if (json.ContainsKey("hysteresis"))
+            {
+                fanCurve.Hysteresis = json["hysteresis"].ToObject<decimal>();
             }
 
             if (json.ContainsKey("sensor"))
