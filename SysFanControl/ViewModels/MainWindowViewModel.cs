@@ -34,7 +34,7 @@ namespace SysFanControl.ViewModels
             new Dictionary<IHardware, ObservableCollection<SensorEx>>();
         private double pollingInterval;
 
-        public string Version { get => "0.5.1"; }
+        public string Version { get => "0.5.2"; }
         public string Title { get => $"SFC v{Version}"; }
         public ObservableCollection<IHardware> Hardware { get; }
         public IHardware SelectedHardware
