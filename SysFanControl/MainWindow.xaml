@@ -15,7 +15,7 @@
     </mah:MetroWindow.Resources>
     
     <StackPanel Orientation="Vertical">
-        <GroupBox Header="Sensors" HorizontalAlignment="Left" Height="130" Margin="10,10,0,0" VerticalAlignment="Top" 
+        <GroupBox Header="Sensors" HorizontalAlignment="Left" Height="140" Margin="10,10,0,0" VerticalAlignment="Top" 
                   Width="234">
             <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="224">
                 <Grid.ColumnDefinitions>
